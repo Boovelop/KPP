@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const pugStatic = require('pug-static');
 
 // 내부 모듈 추가
 const { sequelize } = require('./models/sequelize');
@@ -32,6 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(pugStatic('#{__dirname}/public/'));
 
 // 라우터 사용 설정
 app.use('/', indexRouter);

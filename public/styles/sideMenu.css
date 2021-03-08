@@ -1,0 +1,29 @@
+#gnb-sideMenu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100vh;
+    background: skyblue;
+    z-index: 1;
+    transition: width 0.5s ease-in-out;
+}
+
+#btn-sideOn {
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+    transform: translate(-50px, -25px);
+}
+
+#side-nav-box {
+    margin-left: 50px;
+    margin-top: 100px;
+    vertical-align: baseline;
+}
+
+#sideMenu-list {
+    line-height: 50px;
+}

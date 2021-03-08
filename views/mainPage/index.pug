@@ -1,4 +1,9 @@
 extends ../common/head.pug
     
-block content 
-    h1 gg
+block content
+    include ../common/sideMenu.pug
+    section
+        h1= title
+        #album 
+            each file in album.fileNames
+                img(src= album.staticFileDir + file)
