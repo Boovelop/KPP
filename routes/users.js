@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const User = require('../models/sequelize/users');
+const User = require('../models/users');
 
 /* GET users listing. */
 router
@@ -40,4 +40,16 @@ router
         }
     });
 
+// 로그인 확인
+router.get('/loginCheck', async function (req, res, next) {
+    try {
+        if (req.session.userId) {
+            res.status(200).send(req.session.userId);
+        } else {
+            res.status(204).send({ tt: 'ddd', dd: 'dododo' });
+        }
+    } catch (error) {
+        next(error);
+    }
+});
 module.exports = router;

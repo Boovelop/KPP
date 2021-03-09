@@ -1,11 +1,9 @@
 const fs = require('fs');
 
-// 메인페이지 모델링 클래스 설계
-class mainPage {
+// 모델링 클래스 설계
+class modelMainPage {
     constructor() {
-        // static 설정이 현재 public으로 되어 있다는 전재하의 fielPath
-        this.staticFilePath = './mainPage/index';
-        this.title = 'KPP - K-Pop Pen Site';
+        this.title = 'KPP - K-POP Pen Site';
 
         this.album = {
             fileDir: './public/images/albums/',
@@ -15,7 +13,7 @@ class mainPage {
     }
 }
 
-const model = new mainPage();
+const model = new modelMainPage();
 
 // 이미지 파일 캐싱
 fs.readdir(model.album.fileDir, function (err, data) {

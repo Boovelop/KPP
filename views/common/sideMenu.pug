@@ -1,8 +1,30 @@
-side#gnb-sideMenu
-    button#btn-sideOn <
-    nav#side-nav-box
-        ul#sideMenu-list
-            li Home
-            li K-POP
-            li Community
-            li Story
+block sidebar
+    side#gnb-sideMenu
+        button#btn-sideOn
+            i(class="fas fa-angle-double-left fa-2x")
+
+        #side-top
+            .logo
+            
+        nav#side-nav-main
+            ul#side-main-list
+                li 
+                    a(href="/") Home
+                li 
+                    a(href="/kpop") K-POP
+                li 
+                    a(href="/community") Community
+                li 
+                    a(href="/store") Store
+
+        nav#side-nav-bottom
+            ul#side-bottom-list
+                    li
+                        a#btn-logout(href="#none") Logout
+                    li
+                        a#btn-login(href="#none") Login
+                    li 
+                        a#btn-signup(href="/signup") Signup
+
+block scripts 
+    script(src="./javascripts/sideMenu.js")  

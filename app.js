@@ -2,11 +2,12 @@
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const logger = require('morgan');
 const pugStatic = require('pug-static');
 
 // 내부 모듈 추가
-const { sequelize } = require('./models/sequelize');
+const { sequelize } = require('./models/index');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -34,6 +35,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(pugStatic('#{__dirname}/public/'));
+app.use(
+    session({
+        secret: 'keyboard cat',
+        resave: false,
+        saveUninitialized: true,
+    })
+);
 
 // 라우터 사용 설정
 app.use('/', indexRouter);
@@ -54,7 +62,7 @@ app.use(function (err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('./default/error');
+    res.render('./error');
 });
 
 app.listen(app.get('port'), function () {

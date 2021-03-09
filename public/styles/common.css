@@ -1,1 +1,9 @@
 /* 기본 태그 공통 부분 설정 */
+a {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    color: blue;
+}

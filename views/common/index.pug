@@ -1,0 +1,30 @@
+doctype html
+html(lang="ko")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        
+        if title
+            title=title
+        else
+            title KPP
+
+        //- 스타일 시트 추가
+        block styles
+            link(rel="stylesheet", href="./styles/reset.css")
+            link(rel="stylesheet", href="./styles/common.css")
+            link(rel="stylesheet", href="./styles/sideMenu.css")
+
+        //- 헤드 스크립트 추가
+        block headScripts
+
+        //- 라이브러리 추가
+        block libs
+            link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous")
+    body
+        block sidebar
+        block header
+        block section
+        block foot
+        block scripts

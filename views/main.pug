@@ -1,0 +1,10 @@
+extends ./common/index.pug
+include ./common/sideMenu.pug
+
+block section
+    section
+        h1= title
+        #album 
+            //- each file in album.fileNames
+                img(src= album.staticFileDir + file)
+
