@@ -44,9 +44,9 @@ router
 router.get('/loginCheck', async function (req, res, next) {
     try {
         if (req.session.userId) {
-            res.status(200).send(req.session.userId);
+            res.status(200).send({ result: true });
         } else {
-            res.status(204).send({ tt: 'ddd', dd: 'dododo' });
+            res.status(200).send({ result: false });
         }
     } catch (error) {
         next(error);
