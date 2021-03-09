@@ -5,6 +5,9 @@ block section
     section
         h1= title
         #album 
+            //- img(src="./images/albums/album_0.gif")
             //- each file in album.fileNames
                 img(src= album.staticFileDir + file)
 
+block scripts
+    script(src="./javascripts/main.js")  
