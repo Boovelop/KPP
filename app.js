@@ -16,7 +16,7 @@ const filesRouter = require('./routes/files');
 
 // 서버 설정
 const app = express();
-app.set('port', process.env.PORT || 3000);
+// app.set('port', process.env.PORT || 3000);
 
 // 뷰 엔진 설정
 app.set('views', path.join(__dirname, 'views'));

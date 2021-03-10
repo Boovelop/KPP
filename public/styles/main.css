@@ -1,0 +1,21 @@
+/* 메인 페이지의 공통적인 부분 */
+div {
+    border: 1px solid black;
+}
+/* 비디오 */
+/* #section-video { */
+/* } */
+#section-video > video {
+    width: 100vw;
+    max-width: 100%;
+}
+
+/* 메세지 */
+#section-message {
+    height: 400px;
+}
+
+/* 앨범 */
+#section-album {
+    height: 400px;
+}

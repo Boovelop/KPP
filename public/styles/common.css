@@ -1,4 +1,10 @@
 /* 기본 태그 공통 부분 설정 */
+
+html {
+    font-size: calc(0.875em + 0.25 * (100vw - 80em) / 40);
+    /* font-size: -webkit-calc(87.5% + 0.25 * (100vw - 8000%) / 40); */
+}
+
 a {
     color: black;
     text-decoration: none;

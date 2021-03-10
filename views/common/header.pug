@@ -1,5 +1,13 @@
 block append styles
     link(rel="stylesheet", href="./styles/header.css")
 
+block append scripts
+    script(src="./javascripts/header.js") 
+
 block header
-    h1=title
+    header
+        #header-logo= title
+        #chart 
+            span 차트
+
+        

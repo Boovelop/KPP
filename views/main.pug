@@ -3,19 +3,25 @@ include ./common/header.pug
 include ./common/sideMenu.pug
 include ./common/footer.pug
 
+block append styles 
+    link(rel="stylesheet", href="./styles/main.css")
+
+block append scripts 
+    script(src="./javascripts/main.js") 
 
 block section
     section
         #section-video 
-
+            video(autoplay muted src="https://r3---sn-ab02a0nfpgxapox-bh2se.googlevideo.com/videoplayback?expire=1615371831&ei=10lIYOKAGL_rj-8PrLGG-AE&ip=41.76.201.133&id=o-AMqepHGbH1kqpzNUMowSnnfNk92uIBC9ZHlegmO6b96m&itag=248&aitags=133%2C134%2C135%2C136%2C137%2C160%2C242%2C243%2C244%2C247%2C248%2C271%2C278%2C313%2C394%2C395%2C396%2C397%2C398%2C399%2C400%2C401&source=youtube&requiressl=yes&vprv=1&mime=video%2Fwebm&ns=nn6vxzUl0HHF4k8hWzcZwKYF&gir=yes&clen=49107521&dur=198.072&lmt=1611952753031172&fvip=3&keepalive=yes&fexp=24001374,24007246&c=WEB&txp=5532432&n=QwaKZ-O-eZ_A9B3T&sparams=expire%2Cei%2Cip%2Cid%2Caitags%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cns%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRAIgJvby7jBP2NI77CKS7a8c-cxydod36VrHxkp8rX2XAfcCIAN8F63UKjmc5dMAflaJRgnpijoQONPabK2MLmQUfmZq&redirect_counter=1&rm=sn-wock7s&req_id=f554976ac690a3ee&cms_redirect=yes&ipbypass=yes&mh=v-&mip=14.7.171.210&mm=31&mn=sn-ab02a0nfpgxapox-bh2se&ms=au&mt=1615351719&mv=m&mvi=3&pl=26&usequic=no&lsparams=ipbypass,mh,mip,mm,mn,ms,mv,mvi,pl,usequic&lsig=AG3C_xAwRQIhAIli7tHQoSAG3loikd2Urtn5NmYbJABUPLRegpwQnlXLAiAn1rRlkhJH9OdZT1K18fwLqJXYVA8IZOxgVesQAsMn_g%3D%3D") 
+            video(autoplay muted src="https://r3---sn-i3belney.googlevideo.com/videoplayback?expire=1615376757&ei=FV1IYObJKdKqj-8PxNGL4Ao&ip=118.173.209.249&id=o-ANT26hSrzuLUc-GIVJL2ooZLccjwk4jIhphZs8eLuRL-&itag=399&aitags=133%2C134%2C135%2C136%2C137%2C160%2C242%2C243%2C244%2C247%2C248%2C278%2C394%2C395%2C396%2C397%2C398%2C399&source=youtube&requiressl=yes&vprv=1&mime=video%2Fmp4&ns=Owu4whuHprOiPYPouwUgmFoF&gir=yes&clen=35897178&dur=223.348&lmt=1615090052509774&fvip=3&keepalive=yes&fexp=24001373,24007246&c=WEB&txp=5531432&n=PZZrFNvu2YFo5Afz&sparams=expire%2Cei%2Cip%2Cid%2Caitags%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cns%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRgIhAK3cCBnajE7RmII3XFGBiuM7xPAf_izzpaTVnpyeB3KfAiEA4gfh4WGolrxuk4Q5jxW363ijiddAe1CdpATjbLXblp4%3D&rm=sn-uvu-0gul7s,sn-uvu-c33ez7s,sn-30alr7l&req_id=834f42874659a3ee&redirect_counter=3&cms_redirect=yes&ipbypass=yes&mh=LC&mip=14.7.171.210&mm=30&mn=sn-i3belney&ms=nxu&mt=1615355207&mv=u&mvi=3&pl=26&usequic=no&lsparams=ipbypass,mh,mip,mm,mn,ms,mv,mvi,pl,usequic&lsig=AG3C_xAwRgIhALGs-qFYKFdtMX4novfD3PqdBHHwneEi4_5-qJxMpJjsAiEAx35G4J-b3L7JHezb3UseN3vuIsrI-_WxsoYDO-mq8xg%3D") 
+            
         #section-message
-
+            
         #section-album
 
         //- #album 
             //- each file in album.fileNames
                 img(src= album.staticFileDir + file)
 
-block append scripts 
-    script(src="./javascripts/main.js") 
+
 
