@@ -1,3 +1,6 @@
+block append styles
+    link(rel="stylesheet", href="./styles/sideMenu.css")
+    
 block sidebar
     side#gnb-sideMenu
         button#btn-sideOn
@@ -26,5 +29,5 @@ block sidebar
                     li 
                         a#btn-signup(href="/signup") Signup
 
-block scripts 
+block append scripts 
     script(src="./javascripts/sideMenu.js")  

@@ -1,10 +1,20 @@
 extends ./common/index.pug
+include ./common/header.pug
 include ./common/sideMenu.pug
+include ./common/footer.pug
+
 
 block section
     section
-        h1= title
-        #album 
+        #section-video 
+
+        #section-message
+
+        #section-album
+
+        //- #album 
             //- each file in album.fileNames
                 img(src= album.staticFileDir + file)
 
+block append scripts 
+    script(src="./javascripts/main.js") 
