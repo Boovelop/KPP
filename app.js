@@ -11,7 +11,10 @@ const { sequelize } = require('./models/index');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
+const filesRouter = require('./routes/files');
 
+// 서버 설정
 const app = express();
 app.set('port', process.env.PORT || 3000);
 
@@ -46,6 +49,8 @@ app.use(
 // 라우터 사용 설정
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/auth', authRouter);
+app.use('/files', filesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -56,7 +61,6 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = process.env.NODE_ENV !== 'development' ? err : {};
 
