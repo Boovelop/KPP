@@ -22,7 +22,9 @@ router.get('/scraping', function (req, res, next) {
 			try {
 				// 컨텐츠 타입 확인 : text/html;charset=EUC-KR
 				const charset = charsetFinder(html.headers);
-				$ = cheerio.load(iconv.decode(html.data, charset));
+				let $ = '';
+				if (charset !== 'utf-8') $ = cheerio.load(iconv.decode(html.data, charset));
+				else $ = cheerio.load(html.data);
 
 				const result = {};
 				result.name = $('#middle > div.h_company > div.wrap_company > h2 > a').text();
@@ -35,6 +37,7 @@ router.get('/scraping', function (req, res, next) {
 				const text = result.variance.replace(/[^가-힣]/g, '');
 				console.log(value);
 				console.log(text);
+				console.log(result.variance);
 
 				res.status(200).send(result);
 			} catch (error) {
