@@ -23,11 +23,11 @@ block sidebar
         nav#side-nav-bottom
             ul#side-bottom-list
                     li
-                        a#btn-logout(href="#none") Logout
+                        a#btn-logout(href="/auth/kakao/logout") Logout
                     li
-                        a#btn-login(href="#none") Login
-                    li 
-                        a#btn-signup(href="/signup") Signup
+                        a#btn-login(href="/auth/kakao")
+                            img(src="./images/icons/kakao_login_medium.png")
+
 
 block append scripts 
     script(src="./javascripts/sideMenu.js")  

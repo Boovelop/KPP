@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const User = require('./user');
 
 // 연결할 데이터베이스 정보
 const config = process.env.NODE_ENV || {
@@ -14,5 +15,9 @@ let sequelize = new Sequelize(config.database, config.username, config.password,
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+db.User = User;
+
+User.init(sequelize);
 
 module.exports = db;
