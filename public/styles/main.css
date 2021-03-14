@@ -6,16 +6,18 @@
 /* #section-video { */
 /* } */
 #section-video > video {
-    width: 100vw;
-    max-width: 100%;
+	width: 100vw;
+	max-width: 100%;
 }
 
 /* 메세지 */
 #section-message {
-    height: 400px;
+	height: 400px;
 }
 
 /* 앨범 */
 #section-album {
-    height: 400px;
+	margin: 0 auto;
+	width: 90vw;
+	height: 400px;
 }

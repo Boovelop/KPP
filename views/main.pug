@@ -18,10 +18,9 @@ block section
         #section-message
             
         #section-album
-
-        //- #album 
-            //- each file in album.fileNames
-                img(src= album.staticFileDir + file)
-
+            .album-slick             
+                - for(let i = 0; i < 6; ++i)
+                    div
+                        h3=i
 
 
