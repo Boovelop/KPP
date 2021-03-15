@@ -3,30 +3,35 @@ block append styles
     
 block sidebar
     side#gnb-sideMenu
-        button#btn-sideOn
-            i(class="fas fa-angle-double-left fa-2x")
+        button#btn-sideOnOff
+            i(id="btn-sideOnOffIcon" class="fas fa-angle-double-left fa-2x" )
 
-        #side-top
-            .logo
-            
-        nav#side-nav-main
-            ul#side-main-list
-                li 
-                    a(href="/") Home
-                li 
-                    a(href="/kpop") K-POP
-                li 
-                    a(href="/community") Community
-                li 
-                    a(href="/store") Store
+        #side-content
+            #side-top
+                img(src="./images/icons/main_logo.png" )
+                
+            nav#side-nav-main
+                ul#side-main-list
+                    li 
+                        a(href="/") Home
+                    li 
+                        a(href="/kpop") K-POP
+                    li 
+                        a(href="/community") Community
+                    li 
+                        a(href="/store") Store
 
-        nav#side-nav-bottom
-            ul#side-bottom-list
-                    li
-                        a#btn-logout(href="/auth/kakao/logout") Logout
-                    li
-                        a#btn-login(href="/auth/kakao")
-                            img(src="./images/icons/kakao_login_medium.png")
+            #side-userInfo
+                span#user-name
+                span 님 환영합니다.
+
+            nav#side-nav-bottom
+                ul#side-bottom-list
+                        li
+                            a#btn-logout(href="/auth/kakao/logout") Logout
+                        li
+                            a#btn-login(href="/auth/kakao")
+                                img(src="./images/icons/kakao_login_medium.png")
 
 
 block append scripts 

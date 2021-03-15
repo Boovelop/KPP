@@ -12,24 +12,27 @@ html(lang="ko")
 
         //- 스타일 시트 추가
         block styles
-            link(rel="stylesheet", href="./styles/reset.css")
-            link(rel="stylesheet", href="./styles/common.css")
+            link(rel="stylesheet", href="./styles/reset.css?after")
+            link(rel="stylesheet", href="./styles/common.css?after")
             
 
         //- 헤드 스크립트 추가
         block headScripts
-            script(src="./javascripts/users.js") 
+            script(src="./javascripts/common.js?after") 
 
         //- 라이브러리 추가
         block libs
-            script(src="https://code.jquery.com/jquery-3.6.0.min.js") 
+            script(src="https://code.jquery.com/jquery-3.6.0.min.js?after") 
 
-            link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous")
-            script(src="https://developers.kakao.com/sdk/js/kakao.min.js") 
+            link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css?after" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous")
+            script(src="https://developers.kakao.com/sdk/js/kakao.min.js?after") 
 
-            link(rel="stylesheet" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css")
-            
-            script(type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js")
+            link(rel="stylesheet" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css?after")
+            script(type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js?after")
+
+            script(src="//cdn.jsdelivr.net/npm/sweetalert2@10?after") 
+
+            link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css?after")
 
     body
         block header

@@ -11,7 +11,9 @@ router.get('/images', function (req, res, next) {
 // 클라이언트에서 웹 스크래핑 요청이 있을 때 호출
 router.get('/scraping', function (req, res, next) {
     const url = req.query.url;
-    console.log('--- url : ', url);
+    const scrapingType = req.query.type;
+    console.log('--- scraping url :', url);
+    console.log('--- scraping type :', scrapingType);
 
     axios
         .get(url, {
@@ -27,17 +29,16 @@ router.get('/scraping', function (req, res, next) {
                 if (charset !== 'utf-8') $ = cheerio.load(iconv.decode(html.data, charset));
                 else $ = cheerio.load(html.data);
 
-                const result = {};
-                result.name = $('#middle > div.h_company > div.wrap_company > h2 > a').text();
-                result.todayCost = $('#content > div.section.trade_compare > table > tbody > tr:nth-child(1) > td:nth-child(2)').text();
-                result.variance = $('#content > div.section.trade_compare > table > tbody > tr:nth-child(2) > td:nth-child(2) > em').text();
-                result.fluctuationRate = $('#content > div.section.trade_compare > table > tbody > tr:nth-child(3) > td:nth-child(2) > em').text();
-                // 숫자 및 ,만 추출
-                const value = result.variance.replace(/[^0-9,]/g, '');
-                // 한글만 추출 (초성 제외)
-                const text = result.variance.replace(/[^가-힣]/g, '');
-                console.log(value);
-                console.log(text);
+                let result = null;
+                switch (scrapingType) {
+                    case 'stock':
+                        result = scrapingStock($);
+                        break;
+
+                    default:
+                        res.status(404).send({ result: 'error' });
+                        break;
+                }
 
                 res.status(200).send(result);
             } catch (error) {
@@ -45,8 +46,6 @@ router.get('/scraping', function (req, res, next) {
             }
         });
 });
-
-module.exports = router;
 
 function charsetFinder(header) {
     const contentType = header['content-type'];
@@ -57,3 +56,29 @@ function charsetFinder(header) {
     const result = contentType.substring(findIndex + findText.length, contentType.length);
     return result;
 }
+
+function scrapingStock($) {
+    const result = {};
+
+    result.name = $('#middle > div.h_company > div.wrap_company > h2 > a').text();
+    result.nowVal = $('#_nowVal').text();
+    result.diffVal = $('#_diff > span')
+        .text()
+        .replace(/(\n\r|\n\t|\r\t|\n|\t|\r)/gm, '');
+    result.rate = $('#_rate > span')
+        .text()
+        .replace(/(\n\r|\n\t|\r\t|\n|\t|\r)/gm, '');
+
+    // 숫자 및 ',' 추출
+    // const value = result.variance.replace(/[^0-9,]/g, '');
+
+    // 한글만 추출 (초성 제외)
+    // const text = result.variance.replace(/[^가-힣]/g, '');
+
+    // 공백 제거
+    // replace(/(\n\r|\n\t|\r\t|\n|\t|\r)/gm, '');
+
+    return result;
+}
+
+module.exports = router;

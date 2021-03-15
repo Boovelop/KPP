@@ -4,16 +4,34 @@ include ./common/sideMenu.pug
 include ./common/footer.pug
 
 block append styles 
-    link(rel="stylesheet", href="./styles/main.css")
+    link(rel="stylesheet", href="./styles/main.css?after")
 
 block append scripts 
-    script(src="./javascripts/main.js") 
+    script(src="./javascripts/main.js?after") 
 
 block section
     section
         #section-video 
-            video(autoplay muted src="./videos/iu_celebrity.webm") 
-            video(autoplay muted src="./videos/bts_dynamite.webm") 
+            video(autoplay muted) 
+
+        #section-stock
+            .rolling-box
+                ul.rolling-list
+                    li#rolling-first
+                        span.stock-name 
+                        span.stock-nowVal 
+                        span.stock-diff 
+                        span.stock-rate 
+                    li#rolling-second
+                        span.stock-name 
+                        span.stock-nowVal 
+                        span.stock-diff 
+                        span.stock-rate 
+                    li#rolling-third
+                        span.stock-name 
+                        span.stock-nowVal 
+                        span.stock-diff
+                        span.stock-rate
             
         #section-message
             

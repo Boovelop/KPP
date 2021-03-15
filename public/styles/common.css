@@ -1,52 +1,62 @@
+/* 폰트 추가 */
+
+@import url('https://fonts.googleapis.com/css2?family=Jura:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;500;600;700;900&display=swap');
 /* 기본 태그 공통 부분 설정 */
 
 /* html {
 	font-size: calc(0.875em + 0.25 * (100vw - 80em) / 40);
 	font-size: -webkit-calc(87.5% + 0.25 * (100vw - 8000%) / 40);
 } */
+body {
+    font-family: 'Jura', 'Noto Serif KR', sans-serif, serif;
+    font-weight: 400;
+}
 
 a {
-	color: black;
-	text-decoration: none;
+    color: black;
+    text-decoration: none;
 }
 
 a:hover {
-	color: blue;
+    color: blue;
 }
 
-/* 라이브러리 Slider 설정 */
+.absolute {
+    position: absolute;
+}
 
 .slick-prev {
-	position: absolute;
-	top: 50%;
-	left: 0px;
-	font-size: 0;
-	line-height: 0;
-	display: block;
-	width: 50px;
-	height: 50px;
-	padding: 0;
-	transform: translate(0, -50%);
-	cursor: pointer;
-	color: transparent;
-	border: 1px solid black;
-	outline: none;
-	background: transparent;
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    font-size: 0;
+    line-height: 0;
+    display: block;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    transform: translate(0, -50%);
+    cursor: pointer;
+    color: transparent;
+    border: 1px solid black;
+    outline: none;
+    background: transparent;
 }
 .slick-next {
-	position: absolute;
-	top: 50%;
-	right: 0px;
-	font-size: 0;
-	line-height: 0;
-	display: block;
-	width: 50px;
-	height: 50px;
-	padding: 0;
-	transform: translate(0, -50%);
-	cursor: pointer;
-	color: transparent;
-	border: 1px solid black;
-	outline: none;
-	background: transparent;
+    position: absolute;
+    top: 50%;
+    right: 0px;
+    font-size: 0;
+    line-height: 0;
+    display: block;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    transform: translate(0, -50%);
+    cursor: pointer;
+    color: transparent;
+    border: 1px solid black;
+    outline: none;
+    background: transparent;
 }

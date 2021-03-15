@@ -1,7 +1,9 @@
 #header-logo {
-    float: left;
+    left: 20px;
+    top: 20px;
 }
-
-#chart {
-    text-align: center;
+#header-logo > img {
+    min-height: 50px;
+    max-height: 150px;
+    height: 100%;
 }

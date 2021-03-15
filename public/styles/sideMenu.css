@@ -2,15 +2,22 @@
     position: fixed;
     top: 0;
     right: 0;
-    width: 400px;
     height: 100vh;
+    font-size: 18px;
+    font-weight: 600;
     background: skyblue;
     z-index: 1;
+}
+#side-content {
+    width: 0px;
     transition: width 0.5s ease-in-out;
+}
+.sideMenu-on {
+    width: 400px !important;
 }
 
 /* 사이드 바 ON-OFF 버튼 */
-#btn-sideOn {
+#btn-sideOnOff {
     position: absolute;
     top: 50%;
     width: 50px;
@@ -23,33 +30,39 @@
     cursor: pointer;
     transform: translate(-50px, -25px);
 }
-#btn-sideOn:hover {
+#btn-sideOnOff:hover {
     color: blue;
 }
 
 /* 사이드 바 상단 영역  */
 #side-top {
-    position: relative;
 }
 
 /* 사이드 바 메인 메뉴 */
 #side-nav-main {
-    position: relative;
-    top: 100px;
     margin-left: 50px;
-    /* margin-top: 50%; */
+    margin-top: 50px;
     vertical-align: baseline;
 }
 
 #side-main-list {
     line-height: 50px;
 }
+/* 유저 정보 데이터 */
+#side-userInfo {
+    visibility: hidden;
+    margin-left: 50px;
+    margin-top: 50px;
+}
+#user-name {
+    font-weight: 700;
+    color: rgb(42, 127, 255);
+}
 
 /* 사이드 바 하단 메뉴 */
 #side-nav-bottom {
-    position: relative;
-    top: 200px;
     margin-left: 50px;
+    margin-top: 70px;
 }
 #side-bottom-list::after {
     display: block;
