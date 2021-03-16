@@ -13,9 +13,9 @@ const mainObj = {
 
 window.addEventListener('load', function () {
 	main_headerPositionAbsolute();
-	main_initSlick();
 	main_initVideo();
 
+	setTimeout(main_initSlick, 100);
 	setTimeout(main_bgRandomSet, 100);
 	setTimeout(main_stockSet, 200);
 });
@@ -30,6 +30,7 @@ function main_initSlick() {
 		slidesToScroll: 1,
 		Infinity: true,
 		centerMode: true,
+		centerPadding: '10vw',
 		arrows: true,
 		autoplay: true,
 		autoplaySpeed: 3000, // 자동 스크롤 시 다음으로 넘어가는데 걸리는 시간 (ms)
