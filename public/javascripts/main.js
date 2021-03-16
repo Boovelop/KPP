@@ -16,6 +16,7 @@ window.addEventListener('load', function () {
     main_initSlick();
     main_initVideo();
 
+    setTimeout(main_bgRandomSet, 100);
     setTimeout(main_stockSet, 200);
 });
 
@@ -71,6 +72,13 @@ function main_videoChange(e) {
     mainObj.video.element.src = mainObj.video.sources[setIdx];
     mainObj.video.element.load();
 }
+function main_bgRandomSet() {
+    const max = 2;
+    const rand = Math.round(Math.random() * max + 1); // 01~03
+    console.log(rand);
+    document.getElementById('section-stock').style.backgroundImage = `url('../images/bg/bg_iu_0${rand}.jpg')`;
+    document.getElementById('section-message').style.backgroundImage = `url('../images/bg/bg_iu_0${rand}.jpg')`;
+}
 
 // 주가 스크래핑 데이터 설정
 function main_stockSet() {
@@ -80,116 +88,93 @@ function main_stockSet() {
     // node에 스크래핑을 요청해서 주가 데이터를 받아온다.
     common_getScraping('https://finance.naver.com/item/sise.nhn?code=035900', 'stock').then(function (res) {
         mainObj.stock.datas.push(res);
-        mainObj.stock.resSuccessCnt++;
     });
 
     common_getScraping('https://finance.naver.com/item/sise.nhn?code=352820', 'stock').then(function (res) {
         mainObj.stock.datas.push(res);
-        mainObj.stock.resSuccessCnt++;
     });
 
     common_getScraping('https://finance.naver.com/item/sise.nhn?code=122870', 'stock').then(function (res) {
         mainObj.stock.datas.push(res);
-        mainObj.stock.resSuccessCnt++;
     });
 
     common_getScraping('https://finance.naver.com/item/sise.nhn?code=041510', 'stock').then(function (res) {
         mainObj.stock.datas.push(res);
-        mainObj.stock.resSuccessCnt++;
     });
 
     // 위의 비동기 처리가 모두 완료된 것을 확인하고 동작을 수행하는 루틴
     mainObj.stock.interval = setInterval(() => {
         if (mainObj.stock.datas.length == mainObj.stock.datasMax) {
-            stockRollingText();
             clearInterval(mainObj.stock.interval);
+            mainObj.stock.interval = null;
+            main_stockRolling();
         }
     }, 200);
 }
 
-class rolling {
-    constructor(element, name, nowVal, diffVal, rate) {
-        this.element = element;
-        this.children = {
-            name: name,
-            nowVal: nowVal,
-            diffVal: diffVal,
-            rate: rate,
-        };
-    }
+function main_stockRolling() {
+    const rollingList = document.getElementsByClassName('rolling-list')[0];
+
+    const timer = 2000; // 롤링 주기(ms)
+    const transitionTime = '0.5s'; // 롤링 애니메이션 시간
+    const endAnimTimer = 1000; // css의 transition이 끝난 뒤에 실행할 setTimeout 함수를 위한 시간 설정 값
+
+    // .rolling-list의 자식 ul관련 데이터
+    const childIndex = {
+        max: 2,
+        current: 0,
+        next: 1,
+    };
+
+    let dataCurrentIdx = 0; // 주가 데이터 인덱스
+
+    // 처음 데이터 설정
+    main_stockRollingTextSet(rollingList, 0, mainObj.stock.datas, dataCurrentIdx);
+    main_stockRollingTextSet(rollingList, 1, mainObj.stock.datas, ++dataCurrentIdx);
+
+    rollingList.childNodes[childIndex.next].style.transition = '0s';
+    rollingList.childNodes[childIndex.next].style.transform = 'translateY(100%)';
+
+    // 반복 루틴 실행
+    setInterval(() => {
+        rollingList.childNodes[childIndex.current].style.transition = transitionTime;
+        rollingList.childNodes[childIndex.current].style.transform = 'translateY(-100%)';
+        rollingList.childNodes[childIndex.next].style.transition = transitionTime;
+        rollingList.childNodes[childIndex.next].style.transform = 'translateY(0)';
+
+        setTimeout(() => {
+            rollingList.childNodes[childIndex.current].style.transition = '0s';
+            rollingList.childNodes[childIndex.current].style.transform = 'translateY(100%)';
+
+            if (++dataCurrentIdx >= mainObj.stock.datas.length) dataCurrentIdx = 0;
+            main_stockRollingTextSet(rollingList, childIndex.current, mainObj.stock.datas, dataCurrentIdx);
+
+            if (++childIndex.current >= childIndex.max) childIndex.current = 0;
+            if (++childIndex.next >= childIndex.max) childIndex.next = 0;
+        }, endAnimTimer);
+    }, timer);
 }
-function stockRollingText() {
-    const timer = 2500; // 롤링되는 주기(ms)
 
-    const first = new rolling();
-    first.element = document.getElementById('rolling-first');
-    first.children.name = element.children('.stock-name');
-    first.children.nowVal = element.children('.stock-nowVal');
-    first.children.diffVal = element.children('.stock-diffVal');
-    first.children.rate = element.children('.stock-rate');
+function main_stockRollingTextSet(parentEle, childIdx, datas, datasIdx) {
+    parentEle.childNodes[childIdx].childNodes[0].textContent = datas[datasIdx].name;
+    parentEle.childNodes[childIdx].childNodes[1].textContent = datas[datasIdx].nowVal;
 
-    console.log(first);
-    // const second = document.getElementById('rolling-second'),
-    //     third = document.getElementById('rolling-third');
+    if (datas[datasIdx].rate.includes('-')) {
+        parentEle.childNodes[childIdx].childNodes[2].innerHTML = `<i class="far fa-caret-square-down" style="color:blue"></i>`;
+        parentEle.childNodes[childIdx].childNodes[2].style.color = 'blue';
+        parentEle.childNodes[childIdx].childNodes[3].style.color = 'blue';
+    } else {
+        if (datas[datasIdx].rate.includes('+')) {
+            parentEle.childNodes[childIdx].childNodes[2].innerHTML = `<i class="far fa-caret-square-up" style="color:red"></i>`;
+            parentEle.childNodes[childIdx].childNodes[2].style.color = 'red';
+            parentEle.childNodes[childIdx].childNodes[3].style.color = 'red';
+        } else {
+            parentEle.childNodes[childIdx].childNodes[2].innerHTML = '';
+            parentEle.childNodes[childIdx].childNodes[2].style.color = 'black';
+            parentEle.childNodes[childIdx].childNodes[3].style.color = 'black';
+        }
+    }
 
-    // const first_name = first.children('.stock-name');
-    // const first_nowVal = first.children('.stock-nowVal');
-    // const first_diffVal = first.children('.stock-diffVal');
-    // const first_rate = first.children('.stock-rate');
-
-    // first.children[0].innerHTML = `${mainObj.stock.datas[0].name} \t ${mainObj.stock.datas[0].nowVal} \t ${mainObj.stock.datas[0].diffVal} \t ${mainObj.stock.datas[0].rate}`;
-
-    // setInterval(() => {
-    //     if (move == 2) {
-    //         first.classList.remove('card-sliding');
-    //         first.classList.add('card-sliding-after');
-
-    //         second.classList.remove('card-sliding-after');
-    //         second.classList.add('card-sliding');
-
-    //         third.classList.remove('card-sliding-after');
-    //         third.classList.remove('card-sliding');
-
-    //         move = 0;
-    //     } else if (move == 1) {
-    //         first.classList.remove('card-sliding-after');
-    //         first.classList.add('card-sliding');
-
-    //         second.classList.remove('card-sliding-after');
-    //         second.classList.remove('card-sliding');
-
-    //         third.classList.remove('card-sliding');
-    //         third.classList.add('card-sliding-after');
-
-    //         move = 2;
-    //     } else if (move == 0) {
-    //         first.classList.remove('card-sliding-after');
-    //         first.classList.remove('card-sliding');
-
-    //         second.classList.remove('card-sliding');
-    //         second.classList.add('card-sliding-after');
-
-    //         third.classList.remove('card-sliding-after');
-    //         third.classList.add('card-sliding');
-
-    //         move = 1;
-    //     }
-
-    //     let innerHTML = `${mainObj.stock.datas[dataCnt].name} \t ${mainObj.stock.datas[dataCnt].nowVal} \t ${mainObj.stock.datas[dataCnt].diffVal} \t ${mainObj.stock.datas[dataCnt].rate}`;
-    //     if (dataCnt < mainObj.stock.datas.length - 1) {
-    //         rollingBox.children[listCnt].children[0].innerHTML = innerHTML;
-    //         dataCnt++;
-    //     } else if (dataCnt == mainObj.stock.datas.length - 1) {
-    //         rollingBox.children[listCnt].children[0].innerHTML = innerHTML;
-    //         dataCnt = 0;
-    //     }
-
-    //     if (listCnt < 2) {
-    //         listCnt++;
-    //     } else if (listCnt == 2) {
-    //         listCnt = 0;
-    //     }
-
-    //     console.log(listCnt);
-    // }, timer);
+    parentEle.childNodes[childIdx].childNodes[2].innerHTML += datas[datasIdx].diffVal;
+    parentEle.childNodes[childIdx].childNodes[3].textContent = datas[datasIdx].rate;
 }

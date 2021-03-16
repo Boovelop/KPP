@@ -1,44 +1,52 @@
-/* 메인 페이지의 공통적인 부분 */
-/* div {
-    border: 1px solid black;
-} */
-/* 비디오 */
-/* .post {
-    display: -ms-flexbox;
-    -ms-flex-pack: center;
-    -ms-flex-align: center;
-    -moz-align-items: center;
-    -webkit-align-items: center;
-    -ms-align-items: center;
-    align-items: center;
-    display: -moz-flex;
-    display: -webkit-flex;
-    display: -ms-flex;
-    display: flex;
-    -moz-justify-content: center;
-    -webkit-justify-content: center;
-    -ms-justify-content: center;
-    justify-content: center;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    border-top: 0;
-    min-height: 100vh;
-    height: 100vh;
-    position: relative;
-    text-align: center;
-    overflow: hidden; */
+/* 메인 비디오 */
+
 #section-video > video {
     width: 100vw;
     max-width: 100%;
 }
 
+/* 백그라운드 정보 */
+.bg-overlay {
+    /* position: absolute; */
+    width: 100%;
+    height: 100%;
+    background-color: #a8a8a849;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
 /* 주가 정보 */
 #section-stock {
-    height: 100px;
-    margin: 50px 0px;
+    margin: 0;
+    height: 35vw;
+    min-height: 200px;
+    max-height: 400px;
+    background-image: url('../images/bg/bg_iu_01.jpg');
+    background-repeat: round;
+    background-attachment: fixed;
+    background-size: cover;
 }
+
+#stock-content {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#stock-title {
+    margin: 0px 0px 10px 0px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+}
+#stock-title > span {
+    padding: 0 10px;
+    background: white;
+    border: 1px solid black;
+}
+
+/* 주가 롤링 텍스트 */
 .rolling-box {
     position: relative;
     overflow: hidden;
@@ -55,10 +63,11 @@
     width: 100%;
     height: 100%;
 }
-.rolling-list li {
+.rolling-list > li {
     position: absolute;
-    display: flex;
-    justify-content: space-between;
+    text-align: left;
+    /* display: flex; */
+    /* justify-content: space-between; */
     left: 5%;
     margin-top: 10px;
     width: 90%;
@@ -66,38 +75,51 @@
     transition: 0.5s;
 }
 
-/* .card-sliding {
-    top: 0 !important;
-    z-index: 100 !important;
+.rolling-list > li > span {
+    float: left;
 }
-
-.card-sliding-after {
-    top: -100% !important;
-    z-index: 10 !important;
+.rolling-list > li > span:nth-of-type(1) {
+    width: 33%;
 }
-
-.rolling-box ul li p {
-    font-size: 30px;
-    line-height: 40px;
-    font-weight: bold;
+.rolling-list > li > span:nth-of-type(2) {
+    width: 30%;
 }
-
-.before-slide {
-    transform: translateY(100%);
+.rolling-list > li > span:nth-of-type(3) {
+    width: 22%;
 }
-
-.after-slide {
-    transform: translateY(0);
-} */
-
-/* 메세지 */
-#section-message {
-    height: 400px;
+.rolling-list > li > span:nth-of-type(4) {
+    text-align: right;
+    width: 15%;
 }
 
 /* 앨범 */
 #section-album {
     margin: 0 auto;
-    width: 90vw;
-    height: 400px;
+    height: 60vw;
+    min-height: 400px;
+    max-height: 800px;
+
+    background-image: url('../images/bg/bg_bts.png');
+    background-repeat: round;
+    background-size: cover;
+}
+
+.album-slick {
+    position: relative;
+    top: 50%;
+    margin: auto 50px;
+    transform: translateY(-50%);
+    /* position: relative; */
+}
+
+/* 메세지 */
+#section-message {
+    margin: 0;
+    height: 60vw;
+    min-height: 400px;
+    max-height: 800px;
+    background-image: url('../images/bg/bg_iu_01.jpg');
+    background-attachment: fixed;
+    background-repeat: round;
+    background-size: cover;
 }

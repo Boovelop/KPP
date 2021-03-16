@@ -15,30 +15,33 @@ block section
             video(autoplay muted) 
 
         #section-stock
-            .rolling-box
-                ul.rolling-list
-                    li#rolling-first
-                        span.stock-name 
-                        span.stock-nowVal 
-                        span.stock-diff 
-                        span.stock-rate 
-                    li#rolling-second
-                        span.stock-name 
-                        span.stock-nowVal 
-                        span.stock-diff 
-                        span.stock-rate 
-                    li#rolling-third
-                        span.stock-name 
-                        span.stock-nowVal 
-                        span.stock-diff
-                        span.stock-rate
-            
-        #section-message
+            .bg-overlay
+                #stock-content
+                    h2#stock-title 
+                        span 주가 정보
+                    .rolling-box 
+                        ul.rolling-list
+                            li
+                                //- name, nowVal, diff, rate
+                                - for(let i = 0; i < 4; ++i)
+                                    span
+                            li
+                                - for(let i = 0; i < 4; ++i)
+                                    span 
             
         #section-album
-            .album-slick             
-                - for(let i = 0; i < 6; ++i)
-                    div
-                        h3=i
+            .bg-overlay
+                .album-slick             
+                    - for(let i = 0; i < 6; ++i)
+                        div
+                            h3=i
+
+        #section-message
+            .bg-overlay
+
+
+        
+            
+
 
 

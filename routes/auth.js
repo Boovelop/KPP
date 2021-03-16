@@ -98,18 +98,14 @@ router.get('/kakao/logout', function (req, res, next) {
             console.log('kakao logout success');
             console.log(response.data);
             req.session.destroy();
+            // res.clearCookie();
+
             res.redirect('/');
         })
         .catch(function (err) {
             // 로그아웃 실패
             console.error(err.response.data);
         });
-});
-router.get('/kakao/logout/callback', function (req, res, next) {
-    try {
-    } catch (error) {
-        next(error);
-    }
 });
 
 module.exports = router;
