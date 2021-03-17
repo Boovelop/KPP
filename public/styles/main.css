@@ -1,186 +1,194 @@
 /* 메인 비디오 */
 
 #section-video > video {
-    width: 100vw;
-    max-width: 100%;
+	width: 100vw;
+	max-width: 100%;
 }
 
 /* 백그라운드 정보 */
 .bg-overlay {
-    /* position: absolute; */
-    width: 100%;
-    height: 100%;
-    background-color: #a8a8a849;
-    background-attachment: fixed;
-    background-size: cover;
+	/* position: absolute; */
+	width: 100%;
+	height: 100%;
+	background-color: #a8a8a849;
+	background-attachment: fixed;
+	background-size: cover;
 }
 
 /* 주가 정보 */
 #section-stock {
-    margin: 0;
-    height: 35vw;
-    min-height: 200px;
-    max-height: 400px;
-    background-image: url('../images/bg/bg_iu_1.jpg');
-    background-repeat: round;
-    background-attachment: fixed;
-    background-size: cover;
+	margin: 0;
+	height: 35vw;
+	min-height: 200px;
+	max-height: 400px;
+	background-image: url('../images/bg/bg_iu_1.jpg');
+	background-repeat: round;
+	background-attachment: fixed;
+	background-size: cover;
 }
 
 #stock-content {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 #stock-title {
-    margin: 0px 0px 10px 0px;
-    margin-bottom: 10px;
-    text-align: center;
-    font-size: calc(0.5em + 0.5vw);
-    font-weight: 700;
+	margin: 0px 0px 10px 0px;
+	margin-bottom: 10px;
+	text-align: center;
+	font-size: calc(0.5em + 0.5vw);
+	font-weight: 700;
 }
 #stock-title > span:nth-of-type(1) {
-    padding: 0 10px;
-    background: white;
-    border: 1px solid black;
+	padding: 0 10px;
+	background: white;
+	border: 1px solid black;
 }
 
 #stock-today {
-    position: absolute;
-    margin-left: 10px;
-    font-weight: 300;
-    color: rgb(46, 46, 46);
-    background: #ffffff75;
+	position: absolute;
+	margin-left: 10px;
+	font-weight: 300;
+	color: rgb(46, 46, 46);
+	background: #ffffff75;
 }
 
 /* 주가 롤링 텍스트 */
 .rolling-box {
-    position: relative;
-    overflow: hidden;
-    margin: 0px auto;
-    /* width: 600px; */
-    width: 90%;
-    max-width: 600px;
-    height: 40px;
-    font-family: 'Jura', sans-serif;
-    text-align: center;
-    background: white;
-    border: 1px solid black;
-    border-radius: 5px;
+	position: relative;
+	overflow: hidden;
+	margin: 0px auto;
+	/* width: 600px; */
+	width: 90%;
+	max-width: 600px;
+	height: 40px;
+	font-family: 'Jura', sans-serif;
+	text-align: center;
+	background: white;
+	border: 1px solid black;
+	border-radius: 5px;
 }
 
 .rolling-list {
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
 }
 .rolling-list > li {
-    position: absolute;
-    text-align: left;
-    /* display: flex; */
-    /* justify-content: space-between; */
-    left: 5%;
-    top: calc(25% + 0.4em - 0.25vw);
-    /* margin-top: 10px; */
-    width: 90%;
-    height: 100%;
-    transition: 0.5s;
+	position: absolute;
+	text-align: left;
+	/* display: flex; */
+	/* justify-content: space-between; */
+	left: 5%;
+	top: calc(25% + 0.4em - 0.25vw);
+	/* margin-top: 10px; */
+	width: 90%;
+	height: 100%;
+	transition: 0.5s;
 }
 
 .rolling-list > li > span {
-    font-size: calc(0.4em + 0.5vw);
-    float: left;
+	font-size: calc(0.4em + 0.5vw);
+	float: left;
 }
 .rolling-list > li > span:nth-of-type(1) {
-    width: 33%;
+	width: 33%;
 }
 .rolling-list > li > span:nth-of-type(2) {
-    width: 30%;
+	width: 30%;
 }
 .rolling-list > li > span:nth-of-type(3) {
-    width: 22%;
+	width: 22%;
 }
 .rolling-list > li > span:nth-of-type(4) {
-    text-align: right;
-    width: 15%;
+	text-align: right;
+	width: 15%;
 }
 
 /* 앨범 */
 #section-album {
-    margin: 0 auto;
-    height: 60vw;
-    min-height: 400px;
-    max-height: 800px;
-    background-image: url('../images/bg/bg_album.jpg');
-    background-repeat: round;
-    background-size: cover;
+	margin: 0 auto;
+	height: 60vw;
+	min-height: 400px;
+	max-height: 800px;
+	background-image: url('../images/bg/bg_album.jpg');
+	background-repeat: round;
+	background-size: cover;
 }
 #section-album .bg-overlay {
-    background-color: #1f1f1fad;
+	background-color: #1f1f1fad;
 }
 
 .album-slick {
-    position: relative;
-    top: 50%;
-    margin: auto 10%;
-    transform: translateY(-50%);
-    /* position: relative; */
+	position: relative;
+	top: 50%;
+	margin: auto 10%;
+	transform: translateY(-50%);
+	/* position: relative; */
 }
 .slick-content {
-    margin: 10px;
-    height: 13vw;
-    text-align: center;
-    font-size: 50px;
-    border: 1px solid black;
+	margin: 10px;
+	height: calc(0.3em + 13.6vw);
+	text-align: center;
+	font-size: 50px;
 }
 
 .slick-content > img {
-    width: 100%;
+	width: 100%;
+	height: 13vw;
+	border: 3px solid white;
+	border-radius: 0.3vw;
 }
 
 .slick-prev,
 .slick-next {
-    position: absolute;
-    top: 50%;
-    display: block;
-    padding: 0;
-    width: 1.5vw;
-    /* height: 3vw; */
-    cursor: pointer;
-    color: transparent;
-    outline: none;
-    border: none;
-    background: transparent;
-    /* background-repeat: no-repeat; */
-    transform: translate(0, -50%);
+	position: absolute;
+	top: 50%;
+	display: block;
+	padding: 0;
+	width: 1.5vw;
+	/* height: 3vw; */
+	cursor: pointer;
+	color: transparent;
+	outline: none;
+	border: none;
+	background: transparent;
+	/* background-repeat: no-repeat; */
+	transform: translate(0, -50%);
 }
 .slick-prev {
-    left: -4%;
-    /* background-image: url('../images/icons/caret-left-solid.svg'); */
+	left: -4%;
+	/* background-image: url('../images/icons/caret-left-solid.svg'); */
 }
 .slick-next {
-    right: -4%;
-    /* background-image: url('../images/icons/caret-right-solid.svg'); */
+	right: -4%;
+	/* background-image: url('../images/icons/caret-right-solid.svg'); */
 }
 
 .album-slick > button > img {
-    min-width: 8px;
-    /* filter: opacity(0.5) drop-shadow(0 0 0 skyblue); */
-    filter: opacity(0.8) invert(81%) sepia(39%) saturate(689%) hue-rotate(167deg) brightness(95%) contrast(94%);
+	min-width: 8px;
+	/* filter: opacity(0.5) drop-shadow(0 0 0 skyblue); */
+	filter: opacity(0.8) invert(81%) sepia(39%) saturate(689%) hue-rotate(167deg) brightness(95%) contrast(94%);
 }
 
 .album-slick > button > img:hover {
-    filter: opacity(0.9) invert(34%) sepia(77%) saturate(6109%) hue-rotate(211deg) brightness(102%) contrast(104%);
+	filter: opacity(0.9) invert(34%) sepia(77%) saturate(6109%) hue-rotate(211deg) brightness(102%) contrast(104%);
+}
+
+.album-name {
+	/* position: relative; */
+	/* bottom: -20px; */
+	font-size: calc(0.3em + 0.5vw);
 }
 
 /* 메세지 */
 #section-message {
-    margin: 0;
-    height: 60vw;
-    min-height: 400px;
-    max-height: 800px;
-    background-image: url('../images/bg/bg_iu_1.jpg');
-    background-attachment: fixed;
-    background-repeat: round;
-    background-size: cover;
+	margin: 0;
+	height: 60vw;
+	min-height: 400px;
+	max-height: 800px;
+	background-image: url('../images/bg/bg_iu_1.jpg');
+	background-attachment: fixed;
+	background-repeat: round;
+	background-size: cover;
 }

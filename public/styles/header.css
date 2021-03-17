@@ -1,9 +1,5 @@
-#header-logo {
-    left: 2vw;
-    top: 2vw;
-}
 #header-logo > img {
-    min-height: 50px;
-    max-height: 150px;
-    height: calc(20vw);
+	min-height: 50px;
+	max-height: 256px;
+	height: calc(20vw);
 }
