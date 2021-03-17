@@ -19,6 +19,7 @@ block section
                 #stock-content
                     h2#stock-title 
                         span 주가 정보
+                        span#stock-today
                     .rolling-box 
                         ul.rolling-list
                             li
@@ -32,9 +33,9 @@ block section
         #section-album
             .bg-overlay
                 .album-slick             
-                    - for(let i = 0; i < 6; ++i)
+                    - for(let i = 0; i < 10; ++i)
                         div
-                            p=i
+                            div.slick-content=i
 
         #section-message
             .bg-overlay

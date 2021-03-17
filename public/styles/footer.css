@@ -1,10 +1,18 @@
 footer {
     overflow: hidden;
-    height: 120px;
+    height: 15vw;
+    max-height: 120px;
     background-color: #202020;
     font-family: 'Jura', sans-serif;
     color: #a8a8a8;
     text-align: center;
+}
+#footer-content {
+    position: relative;
+    display: inline-block;
+    font-size: calc(5px + 0.3em + 0.4vw);
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #footer-content > span:nth-of-type(1)::after,
@@ -14,18 +22,12 @@ footer {
     margin: auto 10px;
     content: '';
     width: 1px;
-    height: 10px;
+    height: calc(5px + 0.3em + 0.2vw);
     background-color: #535353;
-    /* border-right: 1px solid rgb(49, 49, 49); */
-}
-
-#footer-content {
-    position: relative;
-    display: inline-block;
-    top: 50%;
-    transform: translateY(-50%);
 }
 
 #footer-content span {
     float: left;
+    padding-top: calc(3px + 0.05vw);
+    padding-bottom: calc(3px + 0.05vw);
 }

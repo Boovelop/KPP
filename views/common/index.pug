@@ -10,24 +10,28 @@ html(lang="ko")
         else
             title KPP
 
-        //- 스타일 시트 추가
+        //- 파비콘
+        <link rel=" shortcut icon" href="./images/icons/favicon.png">
+        <link rel="icon" href="./images/icons/favicon.png">
+
+        //- 스타일 시트
         block styles
             link(rel="stylesheet", href="./styles/reset.css?after")
             link(rel="stylesheet", href="./styles/common.css?after")
             
 
-        //- 헤드 스크립트 추가
+        //- 헤드 스크립트
         block headScripts
             script(src="./javascripts/common.js?after") 
 
-        //- 라이브러리 추가
+        //- 라이브러리
         block libs
             script(src="https://code.jquery.com/jquery-3.6.0.min.js?after") 
 
             link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css?after" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous")
 
             link(rel="stylesheet" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css?after")
-            link(rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css?after")
+            //- link(rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css?after")
             script(type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js?after")
 
 

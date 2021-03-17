@@ -6,7 +6,7 @@
     font-size: 18px;
     font-weight: 600;
     background: skyblue;
-    z-index: 1;
+    z-index: 5;
 }
 #side-content {
     width: 0px;
@@ -31,7 +31,7 @@
     transform: translate(-50px, -25px);
 }
 #btn-sideOnOff:hover {
-    color: blue;
+    color: #0066ff;
 }
 
 /* 사이드 바 상단 영역  */
