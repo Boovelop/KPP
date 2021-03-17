@@ -134,6 +134,10 @@
     border: 1px solid black;
 }
 
+.slick-content > img {
+    width: 100%;
+}
+
 .slick-prev,
 .slick-next {
     position: absolute;

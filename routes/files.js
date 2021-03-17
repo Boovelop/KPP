@@ -3,15 +3,26 @@ const router = express.Router();
 const axios = require('axios');
 const cheerio = require('cheerio');
 const iconv = require('iconv-lite');
+const fs = require('fs');
 
 // 요청한 경로의 폴더 내부에 있는 모든 파일 데이터를 전달해주는 라우트
-router.get('/dir/:', function (req, res, next) {
-    console.log(req.params.dir);
+router.get('/dir', function (req, res, next) {
+    const dir = req.query.dir;
+    try {
+        // 경로가 존재하는지 확인한다.
+        if (fs.existsSync(dir)) {
+            // 경로안의 파일들의 이름을 읽어온다.
+            const readFilesName = fs.readdirSync(dir);
+            res.status(200).send(readFilesName);
+        }
+    } catch (error) {
+        next(error);
+    }
 });
 
 // 요청한 경로와 파일명으로 파일 데이터를 전달해주는 라우트
-router.get('/fileName/:', function (req, res, next) {
-    console.log(req.params.dir, req.params.fileName);
+router.get('/file', function (req, res, next) {
+    console.log(req.query.file, req.query.fileName);
 });
 
 // 클라이언트에서 웹 스크래핑 요청이 있을 때 호출

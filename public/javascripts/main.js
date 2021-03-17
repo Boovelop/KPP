@@ -18,6 +18,7 @@ window.addEventListener('load', function () {
     main_initSlick();
     setTimeout(main_bgRandomSet, 110);
     setTimeout(main_stockSet, 120);
+    setTimeout(main_initAlbum, 130);
 });
 
 function main_headerPositionAbsolute() {
@@ -26,6 +27,7 @@ function main_headerPositionAbsolute() {
 
 function main_initSlick() {
     $('.album-slick').slick({
+        lazyLoad: 'ondemand',
         slidesToShow: 5,
         slidesToScroll: 2,
         // Infinity: true,
@@ -189,4 +191,18 @@ function main_stockRollingTextSet(parentEle, childIdx, datas, datasIdx) {
     parentEle.childNodes[childIdx].childNodes[3].textContent = datas[datasIdx].rate;
 }
 
-function main_() {}
+function main_initAlbum() {
+    common_getFiles('./public/images/albums').then(function (res) {
+        // 배열의 형태로 데이터가 들어온다.
+        if (res) {
+            // public의 경로로 이미지 소스를 추가한다.
+            // const slickContents = document.querySelectorAll('.slick-content > img');
+            // console.log(slickContents);
+            // for (let i = 0; i < slickContents.length; i++) {
+            //     if (res[i]) {
+            //         slickContents[i].src = `./images/albums/${res[i]}`;
+            //     }
+            // }
+        }
+    });
+}
