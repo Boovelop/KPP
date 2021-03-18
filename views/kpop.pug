@@ -1,6 +1,16 @@
 extends ./common/index.pug
+include ./common/header.pug
 include ./common/sideMenu.pug
+include ./common/footer.pug
 
+block append styles
+    link(rel="stylesheet", href="./styles/kpop.css?after")
+
+block append scripts
+    script(src="./javascripts/kpop.js?after") 
 
 block section
-    h2 K-Pop페이지
+    section 
+        .section-history
+
+        .section-cheering

@@ -1,0 +1,12 @@
+.section-history {
+    background: rgb(27, 27, 27);
+}
+
+.section-cheering {
+    margin: 2vw auto;
+    width: 50vw;
+    height: 20vw;
+    background: white;
+    border: 0.25vw solid black;
+    border-radius: 1vw;
+}
