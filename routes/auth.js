@@ -5,6 +5,7 @@ const passport = require('passport');
 const kakaoStrategy = require('passport-kakao').Strategy;
 
 const User = require('../models/user');
+const { query } = require('express');
 
 require('dotenv').config();
 
@@ -23,10 +24,9 @@ passport.use(
             console.log('accesstoken:', accessToken);
 
             kakaoData.accessToken = accessToken;
+
             const user = await User.findOne({ where: { user_id: profile.id } });
             if (user) {
-                // 유저의 프로필 이름이 변경 되었으면??
-                // 게시판들의 이름도 수정해야 하나마나, 결정이 필요
                 done(null, user);
             } else {
                 const newUser = await User.create({
@@ -57,7 +57,6 @@ router.get('/kakao/login/success', function (req, res, next) {
     req.session.kakao_accessToken = kakaoData.accessToken;
 
     // console.log(req.user); // 넘어온 유저 데이터 확인
-
     res.redirect(`/auth/kakao/login/success/front?user_name=${req.user.user_name}`);
 });
 router.get('/kakao/login/success/front', function (req, res, next) {
@@ -65,7 +64,10 @@ router.get('/kakao/login/success/front', function (req, res, next) {
 });
 router.get('/kakao/login/fail', function (req, res, next) {
     console.log(req.user);
-    res.redirect('/');
+    res.redirect(`/auth/kakao/login/fail/front`);
+});
+router.get('/kakao/login/fail/front', function (req, res, next) {
+    res.send(`<script type="text/javascript">alert("로그인에 실패했습니다!"); location.replace("/") </script>`);
 });
 
 router.get('/loginCheck', async function (req, res, next) {

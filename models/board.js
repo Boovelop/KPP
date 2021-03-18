@@ -14,13 +14,20 @@ module.exports = class Board extends Sequelize.Model {
                     type: Sequelize.TEXT(),
                     allowNull: false,
                 },
+                // 게시판에 사용한 이미지 파일들
                 image_files: {
                     type: Sequelize.TEXT(),
                 },
                 // 글 작성자(닉네임 중복 가능)
-                author: {
+                author_name: {
                     type: Sequelize.STRING(50),
                     allowNull: false,
+                },
+                // 조회수
+                views: {
+                    type: Sequelize.INTEGER.UNSIGNED,
+                    allowNull: false,
+                    defaultValue: 0,
                 },
                 created_at: {
                     type: Sequelize.DATE,

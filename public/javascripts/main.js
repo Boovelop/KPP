@@ -12,6 +12,9 @@ const mainObj = {
 };
 
 window.addEventListener('load', function () {
+    history.scrollRestoration = 'manual';
+    // history.scrollRestoration = 'auto';
+
     main_headerPositionAbsolute();
     main_initVideo();
     setTimeout(main_initAlbum, 10);
@@ -20,7 +23,7 @@ window.addEventListener('load', function () {
 });
 
 function main_headerPositionAbsolute() {
-    document.getElementById('header-logo').classList.add('absolute');
+    document.getElementById('header-logo').style.position = 'absolute';
 }
 
 function main_initSlick() {
@@ -53,6 +56,7 @@ function main_initSlick() {
     setTimeout(() => {
         document.querySelector('.slick-prev').innerHTML += '<image src="../images/icons/caret-left-solid.svg" />';
         document.querySelector('.slick-next').innerHTML += '<image src="../images/icons/caret-right-solid.svg" />';
+        // window.scrollTo(0, 0);
     }, 20);
 }
 function main_initVideo() {

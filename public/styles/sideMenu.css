@@ -1,90 +1,105 @@
 #gnb-sideMenu {
-	position: fixed;
-	top: 0;
-	right: 0;
-	height: 100vh;
-	font-size: calc(0.5em + 0.7vw);
-	font-weight: 600;
-	background: skyblue;
-	z-index: 5;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    font-size: calc(0.5em + 0.7vw);
+    font-weight: 600;
+    background: skyblue;
+    z-index: 5;
 }
+#gnb-sideMenu::after {
+    position: absolute;
+    left: 0;
+    top: 0;
+    content: '';
+    width: 0.3vw;
+    height: 100vh;
+
+    background: #008cff4b;
+    /* background: linear-gradient(180deg, rgb(162, 229, 255) 20%, #00ffea 200%); */
+    filter: blur(0.3vw);
+}
+
 #side-content {
-	width: 0px;
-	max-width: 400px;
-	transition: width 0.5s ease-in-out;
+    width: 0px;
+    max-width: 400px;
+    transition: width 0.5s ease-in-out;
 }
 .sideMenu-on {
-	width: calc(50px + 20vw) !important;
+    width: calc(50px + 20vw) !important;
 }
 
 #side-content > div,
 #side-content > nav {
-	opacity: 0;
-	transition: opacity 0.5s ease-in-out;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
 }
 
 /* 사이드 바 ON-OFF 버튼 */
 #btn-sideOnOff {
-	position: absolute;
-	top: 50%;
-	width: 50px;
-	height: 50px;
-	color: skyblue;
-	vertical-align: middle;
-	background: none;
-	border: none;
-	outline: none;
-	cursor: pointer;
-	transform: translate(-50px, -25px);
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    height: 50px;
+    color: skyblue;
+    vertical-align: middle;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transform: translate(-50px, -25px);
 }
 #btn-sideOnOff:hover {
-	color: #0066ff;
+    color: #0066ff;
 }
 
 /* 사이드 바 상단 영역  */
 #side-top > img {
-	min-height: 50px;
-	max-height: 256px;
-	height: calc(25vw);
+    margin-top: 1vw;
+    margin-left: 1vw;
+    min-height: 50px;
+    max-height: 256px;
+    height: calc(25vw);
 }
 
 /* 사이드 바 메인 메뉴 */
 #side-nav-main {
-	margin-left: calc(10% + 1vw);
-	margin-top: 20%;
-	vertical-align: baseline;
+    margin-left: calc(10% + 1vw);
+    margin-top: 20%;
+    vertical-align: baseline;
 }
 
 #side-main-list {
-	line-height: calc(70px + 0.2vw);
+    line-height: calc(70px + 0.2vw);
 }
 /* 유저 정보 데이터 */
 #side-userInfo {
-	margin-left: calc(10% + 1vw);
-	margin-top: 20%;
+    margin-left: calc(10% + 1vw);
+    margin-top: 20%;
 }
 #user-name {
-	font-weight: 700;
-	color: rgb(42, 127, 255);
+    font-weight: 700;
+    color: rgb(42, 127, 255);
 }
 
 /* 사이드 바 하단 메뉴 */
 #side-nav-bottom {
-	margin-left: calc(10% + 1vw);
-	margin-top: 22%;
+    margin-left: calc(10% + 1vw);
+    margin-top: 22%;
 }
 #side-bottom-list::after {
-	display: block;
-	content: '';
-	clear: both;
+    display: block;
+    content: '';
+    clear: both;
 }
 #side-bottom-list > li {
-	display: inline-block;
+    display: inline-block;
 }
 #side-bottom-list > li > a {
-	padding-right: 20px;
+    padding-right: 20px;
 }
 #side-bottom-list img {
-	width: calc(50px + 3vw);
-	max-width: 95px;
+    width: calc(50px + 3vw);
+    max-width: 95px;
 }

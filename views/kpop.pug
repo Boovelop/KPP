@@ -3,8 +3,12 @@ include ./common/header.pug
 include ./common/sideMenu.pug
 include ./common/footer.pug
 
+block append headScripts 
+    script(src="./libs/DataTables/datatables.min.js")
+
 block append styles
-    link(rel="stylesheet", href="./styles/kpop.css?after")
+    link(rel="stylesheet" href="./libs/DataTables/dataTables.min.css")
+    link(rel="stylesheet" href="./styles/kpop.css?after")
 
 block append scripts
     script(src="./javascripts/kpop.js?after") 

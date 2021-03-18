@@ -26,10 +26,6 @@ a:hover {
     clear: both;
 }
 
-.absolute {
-    position: absolute;
-}
-
 /* 모달 */
 .modal {
     display: none;

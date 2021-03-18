@@ -1,6 +1,25 @@
 extends ./common/index.pug
+include ./common/header.pug
 include ./common/sideMenu.pug
+include ./common/footer.pug
+
+
+//- 라이브러리 추가
+block append styles 
+    link(rel="stylesheet" href="./libs/Gridjs/dist/theme/mermaid.min.css?after")
+    link(rel="stylesheet", href="./styles/community.css?after")
+
+block append headScripts 
+    script(src="./libs/Gridjs/dist/gridjs.production.min.js?after")
+
+block append scripts
+    script(src="./javascripts/community.js?after")
 
 
 block section
-    h2 커뮤니티 페이지
+    section 
+        .section-title
+        
+        .section-board
+            #ttt
+
