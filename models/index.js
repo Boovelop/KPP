@@ -6,12 +6,12 @@ const CheeringComment = require('./cheeringComment');
 
 // 연결할 데이터베이스 정보
 const config = process.env.NODE_ENV || {
-    username: 'root',
-    password: '1234',
-    database: 'kpp',
-    host: '127.0.0.1',
-    port: 3306,
-    dialect: 'mysql',
+	username: 'root',
+	password: '1234',
+	database: 'kpp',
+	host: '127.0.0.1',
+	port: 3306,
+	dialect: 'mysql',
 };
 const db = {};
 let sequelize = new Sequelize(config.database, config.username, config.password, config);
@@ -31,13 +31,15 @@ Comment.init(sequelize);
 CheeringComment.init(sequelize);
 
 // 테이블 관계 설정
-db.User.hasMany(db.Board, { foreignKey: 'author', sourceKey: 'user_id' });
-db.Board.belongsTo(db.User, { foreignKey: 'author', targetKey: 'user_id' });
+db.User.hasMany(db.Board, { foreignKey: 'author', sourceKey: 'user_uniqueName' });
+db.Board.belongsTo(db.User, { foreignKey: 'author', targetKey: 'user_uniqueName' });
 
-db.User.hasMany(db.Comment, { foreignKey: 'commenter', sourceKey: 'user_id' });
-db.Comment.belongsTo(db.User, { foreignKey: 'commenter', targetKey: 'user_id' });
+db.User.hasMany(db.Comment, { foreignKey: 'commenter', sourceKey: 'user_uniqueName' });
+db.Comment.belongsTo(db.User, { foreignKey: 'commenter', targetKey: 'user_uniqueName' });
+db.Board.hasMany(db.Comment, { foreignKey: 'boardId', sourceKey: 'id' });
+db.Comment.belongsTo(db.User, { foreignKey: 'boardId', targetKey: 'id' });
 
-db.User.hasMany(db.CheeringComment, { foreignKey: 'commenter', sourceKey: 'user_id' });
-db.CheeringComment.belongsTo(db.User, { foreignKey: 'commenter', targetKey: 'user_id' });
+db.User.hasMany(db.CheeringComment, { foreignKey: 'commenter', sourceKey: 'user_uniqueName' });
+db.CheeringComment.belongsTo(db.User, { foreignKey: 'commenter', targetKey: 'user_uniqueName' });
 
 module.exports = db;

@@ -4,13 +4,13 @@ include ./common/sideMenu.pug
 include ./common/footer.pug
 
 
-//- 라이브러리 추가
 block append styles 
-    link(rel="stylesheet" href="./libs/Gridjs/dist/theme/mermaid.min.css?after")
     link(rel="stylesheet", href="./styles/community.css?after")
+    
 
-block append headScripts 
-    script(src="./libs/Gridjs/dist/gridjs.production.min.js?after")
+block append libs 
+    script(src="./libs/DataTables/datatable.min.css") 
+    link(rel="stylesheet", href="./libs/DataTables/datatable.min.js")
 
 block append scripts
     script(src="./javascripts/community.js?after")
@@ -21,5 +21,11 @@ block section
         .section-title
         
         .section-board
-            #ttt
+            table#board-table
+                thead.thead
+                    th 제목
+                    th 작성자
+                    th 작성일
+                    th 조회수
+                tbody.tbody
 

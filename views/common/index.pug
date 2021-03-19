@@ -19,20 +19,23 @@ html(lang="ko")
             link(rel="stylesheet", href="./styles/reset.css?after")
             link(rel="stylesheet", href="./styles/common.css?after")
             
+        //- 라이브러리
+        block libs
+            //- jQeury
+            script(src="./libs/jquery/jquery-3.6.0.min.js?after") 
+            //- 폰트 이미지
+            link(rel="stylesheet" href="./libs/fontawesome-free-5.15.2-web/css/all.min.css")
+            //- css 애니메이션 효과
+            link(rel="stylesheet" href="./libs/animate.css-4.1.1/animate.min.css?after")
+            //- 슬라이더 기능 제공
+            link(rel="stylesheet" href="./libs/slick-1.8.1/slick/slick.css?after")
+            script(src="./libs/slick-1.8.1/slick/slick.min.js?after")
+            //- Alert의 이쁜 기능
+            script(src="./libs/SweetAlert2/sweetalert2.all.min.js") 
 
         //- 헤드 스크립트
         block headScripts
             script(src="./javascripts/common.js?after") 
-
-        //- 라이브러리
-        block libs
-            link(rel="stylesheet" href="./libs/fontawesome-free-5.15.2-web/css/all.min.css")
-            link(rel="stylesheet" href="./libs/animate.css-4.1.1/animate.min.css?after")
-            link(rel="stylesheet" href="./libs/slick-1.8.1/slick/slick.css?after")
-
-            script(src="./libs/jquery/jquery-3.6.0.min.js?after") 
-            script(src="./libs/slick-1.8.1/slick/slick.min.js?after")
-            script(src="./libs/SweetAlert2/sweetalert2.all.min.js") 
            
 
     body
