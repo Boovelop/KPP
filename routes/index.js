@@ -21,4 +21,8 @@ router.get('/signup', function (req, res, next) {
 	res.render('./signup.pug', { title: 'KPP - Signup' });
 });
 
+router.get('/write', function (req, res, next) {
+	res.render('./write.pug', { title: 'KPP - Write' });
+});
+
 module.exports = router;

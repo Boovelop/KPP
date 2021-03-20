@@ -33,6 +33,7 @@ passport.use(
 					login_type: 'kakao',
 					user_id: profile.id,
 					user_name: profile.username,
+					user_uniqueName: `${profile.username}(${profile.id})`,
 					user_email: profile._json.kakao_account.email,
 				});
 				done(null, newUser);
@@ -125,7 +126,28 @@ router.get('/kakao/logout/callback', function (req, res, next) {
 });
 
 router.get('/kakao/logout/success/front', function (req, res, next) {
-	res.send(`<script type="text/javascript">alert('로그아웃 성공! ${req.query.user_name}님 안녕히 가세요^^'); location.replace('/'); </script>`);
+	res.send(`
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>KPP - Logout</title>
+			<script type="text/javascript" src="//cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.js"></script>
+		</head>
+		<body>
+			<script>
+				Swal.fire({
+					position: 'top-end',
+					icon: 'success',
+					title: '로그아웃 성공!',
+					text: '${req.query.user_name}님 안녕히 가세요^^',
+					showConfirmButton: false,
+					timer: 1500
+				});
+			</script>
+		</body>
+	</html>`);
+	// alert('로그아웃 성공! ${req.query.user_name}님 안녕히 가세요^^'); location.replace('/');
 });
 
 module.exports = router;

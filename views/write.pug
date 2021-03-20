@@ -1,0 +1,38 @@
+extends ./common/index.pug
+include ./common/header.pug
+
+block append libs
+    script(src="./libs/summernote-0.8.18-dist/summernote.min.js") 
+    script(src="./libs/summernote-0.8.18-dist/summernote-lite.min.js") 
+    link(rel="stylesheet", href="./libs/summernote-0.8.18-dist/summernote.min.css")
+    link(rel="stylesheet", href="./libs/summernote-0.8.18-dist/summernote-lite.min.css")
+
+block append styles 
+    link(rel="stylesheet", href="./styles/writePage.css?after")
+    
+block append scripts
+    script(src="./javascripts/writePage.js?after")
+
+
+block section 
+    section
+        .section-title
+            h2 글 쓰기
+
+        .section-content
+            table
+                tr  
+                    td.write-title 작성자
+                    td
+                        input#title-text(type="text" disabled)
+                tr
+                    td.write-title 제목
+                    td
+                        input(type="text")
+                tr
+                    td.write-title 내용
+                    td
+                        #summer-note
+
+            button#submit 글 게시
+

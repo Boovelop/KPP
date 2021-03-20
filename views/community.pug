@@ -4,14 +4,13 @@ include ./common/sideMenu.pug
 include ./common/footer.pug
 
 
+block append libs 
+    script(src="./libs/DataTables/datatables.min.js") 
+    link(rel="stylesheet", href="./libs/DataTables/datatables.min.css")
+
 block append styles 
     link(rel="stylesheet", href="./styles/community.css?after")
     
-
-block append libs 
-    script(src="./libs/DataTables/datatable.min.css") 
-    link(rel="stylesheet", href="./libs/DataTables/datatable.min.js")
-
 block append scripts
     script(src="./javascripts/community.js?after")
 
@@ -19,13 +18,15 @@ block append scripts
 block section
     section 
         .section-title
-        
-        .section-board
-            table#board-table
-                thead.thead
-                    th 제목
-                    th 작성자
-                    th 작성일
-                    th 조회수
-                tbody.tbody
+            ul.warp-menu
+                li 
+                    a(href="") 게시판
+                li 
+                    a(href="") 실시간 채팅
 
+        .section-board
+            table#board-table.display(style="width:100%")
+                thead.thead
+
+                tbody.tbody
+            button(onclick='location.href="/write"') 글쓰기
