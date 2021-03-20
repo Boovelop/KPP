@@ -8,8 +8,13 @@ const boardObj = {
 };
 
 window.addEventListener('load', function (e) {
+	community_initEvent();
 	community_initTables();
 });
+
+function community_initEvent() {
+	document.getElementById('write').addEventListener('click', community_onClickWriteBtn);
+}
 
 function community_initTables() {
 	community_getTablesData();
@@ -192,4 +197,18 @@ function community_onClickBoardTitle(e) {
 	const data = boardObj.table.row(this).data();
 
 	console.log(data);
+}
+
+function community_onClickWriteBtn(e) {
+	e.preventDefault();
+
+	common_loginCheck().then(function (response) {
+		if (!response.isLogin) {
+			Swal.fire({
+				icon: 'error',
+				text: '글쓰기에 로그인이 필요합니다!',
+			});
+		}
+	});
+	// onclick='location.href="/write"'
 }

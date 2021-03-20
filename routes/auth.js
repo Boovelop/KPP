@@ -61,7 +61,12 @@ router.get('/kakao/login/success', function (req, res, next) {
 	res.redirect(`/auth/kakao/login/success/front?user_name=${req.user.user_name}`);
 });
 router.get('/kakao/login/success/front', function (req, res, next) {
-	res.send(`<script type="text/javascript">alert("로그인 성공! ${req.query.user_name}님 어서오세요~!"); location.replace("/") </script>`);
+	let redirectPath = '/';
+	if (req.session.returnTo) redirectPath = req.session.returnTo;
+
+	res.send(
+		`<script type='text/javascript'>alert('로그인 성공! ${req.query.user_name}님 어서오세요~!'); location.replace('${redirectPath}') </script>`
+	);
 });
 router.get('/kakao/login/fail', function (req, res, next) {
 	console.log(req.user);
@@ -120,34 +125,16 @@ router.get('/kakao/logout', function (req, res, next) {
 router.get('/kakao/logout/callback', function (req, res, next) {
 	console.log('kakao logout success');
 	console.log('logout response :', res);
-	req.session.destroy();
 
-	res.redirect('/auth/kakao/logout/success/front');
+	res.redirect(`/auth/kakao/logout/success/front?user_name=${req.user.user_name}`);
 });
 
 router.get('/kakao/logout/success/front', function (req, res, next) {
-	res.send(`
-	<!DOCTYPE html>
-	<html>
-		<head>
-			<meta charset="UTF-8">
-			<title>KPP - Logout</title>
-			<script type="text/javascript" src="//cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.js"></script>
-		</head>
-		<body>
-			<script>
-				Swal.fire({
-					position: 'top-end',
-					icon: 'success',
-					title: '로그아웃 성공!',
-					text: '${req.query.user_name}님 안녕히 가세요^^',
-					showConfirmButton: false,
-					timer: 1500
-				});
-			</script>
-		</body>
-	</html>`);
-	// alert('로그아웃 성공! ${req.query.user_name}님 안녕히 가세요^^'); location.replace('/');
+	let redirectPath = '/';
+	if (req.session.returnTo) redirectPath = req.session.returnTo;
+
+	req.session.destroy();
+	res.send(`<script>alert('로그아웃 성공! ${req.query.user_name}님 안녕히 가세요^^'); location.replace('${redirectPath}');</script>`);
 });
 
 module.exports = router;
