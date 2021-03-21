@@ -22,7 +22,6 @@ module.exports = class Board extends Sequelize.Model {
 				// 조회수
 				views: {
 					type: Sequelize.INTEGER.UNSIGNED,
-					allowNull: false,
 					defaultValue: 0,
 				},
 				created_at: {
@@ -40,6 +39,7 @@ module.exports = class Board extends Sequelize.Model {
 				paranoid: false,
 				charset: 'utf8mb4',
 				collate: 'utf8mb4_unicode_ci',
+				onDelete: 'CASCADE',
 			}
 		);
 	}

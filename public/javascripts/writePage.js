@@ -38,4 +38,21 @@ function writePage_onClickSubmitBtn(e) {
 		});
 		return;
 	}
+
+	// 서버에 게시 글 post 요청
+	const postData = {
+		title: title,
+		text: text,
+		author: document.getElementById('author').textContent,
+	};
+
+	fetch('/board', {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(postData),
+	}).then(function (res) {
+		console.log(res);
+	});
 }

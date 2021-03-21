@@ -28,7 +28,8 @@ router.get('/signup', function (req, res, next) {
 
 router.get('/write', function (req, res, next) {
 	req.session.returnTo = req.path;
-	res.render('./write.pug', { title: 'KPP - Write' });
+
+	res.render('./write.pug', { title: 'KPP - Write', author: req.session.user_uniqueName });
 });
 
 module.exports = router;

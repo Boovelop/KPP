@@ -1,9 +1,8 @@
 // fetch함수로 데이터 요청 및 응답 데이터를 받아오는 함수
-async function common_fetchGetResponse(url, headersOption, reqData = null) {
+async function common_fetchGetResponse(url, headersOption) {
 	let response = await fetch(url, {
 		method: 'get',
 		headers: headersOption,
-		data: reqData,
 	});
 
 	if (response.ok) {
@@ -19,9 +18,6 @@ async function common_fetchGetResponse(url, headersOption, reqData = null) {
 // 로그인 체크 관련 함수
 async function common_loginCheck() {
 	let response = await common_fetchGetResponse('/auth/loginCheck', { 'Content-Type': 'application/json' });
-
-	document.cookie = `current_url=${window.location.href}`;
-
 	return response;
 }
 
@@ -47,6 +43,12 @@ async function common_getFiles(dir) {
 async function common_getFile(dir, fileName) {
 	const fullDir = `/files/file?dir=${dir}&fileName=${fileName}`;
 	let response = await common_fetchGetResponse(fullDir, { 'Content-Type': 'application/json' });
+	return response;
+}
+
+// 게시판 데이터 받아오는 함수
+async function common_getBoards() {
+	let response = await common_fetchGetResponse('/board', { 'Content-Type': 'application/json' });
 	return response;
 }
 

@@ -16,8 +16,8 @@ function community_initEvent() {
 	document.getElementById('write').addEventListener('click', community_onClickWriteBtn);
 }
 
-function community_initTables() {
-	community_getTablesData();
+async function community_initTables() {
+	const datas = await community_getTablesData();
 
 	const data = [
 		['Tiger Nixon', 'System Architect', '2011/04/25', '1'],
@@ -189,7 +189,12 @@ function community_initTables() {
 	// });
 }
 
-function community_getTablesData() {}
+async function community_getTablesData() {
+	common_getBoards().then(function (response) {
+		console.log(response);
+		return response;
+	});
+}
 
 // 게시판 글 클릭시 호출되는 콜백 함수
 function community_onClickBoardTitle(e) {
@@ -208,7 +213,8 @@ function community_onClickWriteBtn(e) {
 				icon: 'error',
 				text: '글쓰기에 로그인이 필요합니다!',
 			});
+			return;
 		}
+		window.location.href = '/write';
 	});
-	// onclick='location.href="/write"'
 }

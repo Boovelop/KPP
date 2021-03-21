@@ -39,6 +39,12 @@ section {
 	text-align: center;
 }
 
+#author {
+	margin-left: 0.2vw;
+}
+#title-text {
+	font-size: calc(0.1em + 0.8vw);
+}
 #submit {
 	float: right;
 	margin-top: 0.2vw;
