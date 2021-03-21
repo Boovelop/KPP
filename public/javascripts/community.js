@@ -208,13 +208,13 @@ function community_onClickWriteBtn(e) {
 	e.preventDefault();
 
 	common_loginCheck().then(function (response) {
-		if (!response.isLogin) {
-			Swal.fire({
-				icon: 'error',
-				text: '글쓰기에 로그인이 필요합니다!',
-			});
-			return;
-		}
+		// if (!response.isLogin) {
+		// 	Swal.fire({
+		// 		icon: 'error',
+		// 		text: '글쓰기에 로그인이 필요합니다!',
+		// 	});
+		// 	return;
+		// }
 		window.location.href = '/write';
 	});
 }

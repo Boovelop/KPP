@@ -14,7 +14,21 @@ function writePage_initEvent() {
 function writePage_initSummerNote() {
 	writePageObj.summerNoteElem = $('#summer-note').summernote({
 		lang: 'ko-KR',
-		height: '20vw',
+		height: '37vh',
+		toolbar: [
+			// [groupName, [list of button]]
+			['Font Style', ['fontname']],
+			['style', ['bold', 'italic', 'underline']],
+			['font', ['strikethrough']],
+			['fontsize', ['fontsize']],
+			['color', ['forecolor', 'color']],
+			['para', ['ul', 'ol', 'paragraph']],
+			['height', ['height']],
+			['insert', ['picture', 'link', 'video']],
+			['Misc', ['help']],
+		],
+		fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '굴림', '돋움체', '바탕체'],
+		fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72'],
 	});
 }
 function writePage_onClickSubmitBtn(e) {
@@ -54,5 +68,11 @@ function writePage_onClickSubmitBtn(e) {
 		body: JSON.stringify(postData),
 	}).then(function (res) {
 		console.log(res);
+		if (res.status == 200) {
+			Swal.fire({
+				icon: 'success',
+				text: '글쓰기 성공!',
+			});
+		}
 	});
 }
