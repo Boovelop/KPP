@@ -13,29 +13,30 @@ block append styles
     link(rel="stylesheet", href="./styles/detailBoard.css?after")
     
 block append scripts
-    script(src="./javascripts/writePage.js?after")
+    script(src="./javascripts/selectBoard.js?after")
 
 
 block section 
     section
-        .section-title
-            h2 글 쓰기
-
         .section-content
             table
                 tr  
                     td.write-title 작성자
                     td
-                        span#author=author
+                        span#author
                 tr
                     td.write-title 제목
                     td
+                        span.title-text
                         input.title-text(type="text")
                 tr
                     td.write-title 내용
                     td
+                        #text
                         #summer-note
-
-            button#submit 글 게시
+            button#cancel 취소
+            button#modify-ok 수정 완료
+            button#delete 삭제
+            button#modify 수정
             .clear
 

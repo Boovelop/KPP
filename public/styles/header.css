@@ -1,5 +1,5 @@
-#header-logo > img {
-	min-height: 50px;
-	max-height: 256px;
-	height: calc(20vw);
+#header-logo img {
+    min-height: 50px;
+    max-height: 256px;
+    height: calc(20vw);
 }

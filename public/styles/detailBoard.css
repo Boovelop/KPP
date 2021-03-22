@@ -1,0 +1,53 @@
+section {
+    font-size: calc(0.1em + 0.8vw);
+    min-height: 65vh;
+}
+
+.section-title {
+    margin: 3vw 0;
+    text-align: center;
+    font-size: calc(0.1em + 1.2vw);
+}
+
+.section-content {
+    margin: 0 auto;
+    width: 60%;
+}
+.section-content table {
+    margin: auto;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0.2vw;
+}
+.section-content button {
+    float: right;
+    margin-top: 0.2vw;
+    margin-right: 0.2vw;
+}
+.section-content > table td {
+    padding: 0.3vw;
+    border: 1px solid black;
+}
+.section-content > table td:nth-of-type(1) {
+    width: 10%;
+}
+.section-content > table input {
+    padding-left: 0;
+    border: none;
+    background: none;
+    width: 90%;
+}
+
+.note-editor {
+    /* 썸머노트 에디터 */
+    max-width: 100%;
+}
+
+.write-title {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.title-text {
+    font-size: calc(0.1em + 0.8vw);
+}
