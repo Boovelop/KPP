@@ -73,3 +73,9 @@ function common_getRandomNumber(min, max) {
 function common_getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+// DB의 created_at 데이터를 YYYY-MMMM-DD HH:MM:SS 포맷형태로 바꿔서 리턴
+function common_getCreatedAtFormat(createAt) {
+	const createDay = createAt.split('T');
+	createDay[1] = createDay[1].slice(0, createDay[1].length - 5);
+	return createDay[0] + ' ' + createDay[1];
+}
