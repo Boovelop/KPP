@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('./app');
+var app = require('./app').app;
 var debug = require('debug')('localhost');
 var http = require('http');
 require('dotenv').config();
@@ -21,7 +21,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-
+// app.io.attach(server);
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -85,3 +85,5 @@ function onListening() {
     var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
     debug('Listening on ' + bind);
 }
+
+module.exports.server = server;

@@ -1,6 +1,9 @@
+/* wirte 페이지와 selectBoard 페이지에서 공통적으로 사용하는 styles */
+
 section {
     font-size: calc(0.1em + 0.8vw);
     min-height: 65vh;
+    margin-bottom: 100px;
 }
 
 .section-title {
@@ -36,6 +39,15 @@ section {
     border: none;
     background: none;
     width: 90%;
+}
+
+.section-content > a {
+    color: cadetblue;
+    font-size: calc(0.1em + 1vw);
+    font-weight: 700;
+}
+.section-content > a:hover {
+    color: blue;
 }
 
 .note-editor {

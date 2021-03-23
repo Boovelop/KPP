@@ -3,6 +3,8 @@ include ./common/header.pug
 include ./common/sideMenu.pug
 include ./common/footer.pug
 
+block append headScripts 
+    script(src="/socket.io/socket.io.js")
 
 block append libs 
     script(src="./libs/DataTables/datatables.min.js") 
@@ -13,6 +15,7 @@ block append styles
     
 block append scripts
     script(src="./javascripts/community.js?after")
+    
 
 
 block section
@@ -20,9 +23,9 @@ block section
         .section-title
             ul.warp-menu
                 li 
-                    a(href="") 게시판
+                    a#warp-board(href="#") 게시판
                 li 
-                    a(href="") 실시간 채팅
+                    a#warp-chat(href="#") 실시간 채팅
 
         .section-board
             table#board-table.display(style="width:100%")
@@ -30,3 +33,10 @@ block section
 
                 tbody.tbody
             button#write 글쓰기
+
+        .section-chat
+            #chat-list
+                -for(let i = 0; i < 20; ++i)
+                    p=i + 'ㅋㅋㅋㅋzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzdfasdfㄴㅇ라부리ㅏㅇ뤂ㅇㄴ;ㅣ뤂ㅎ이ㅏ러ㅣ라ㅓㅇ니;런ㅇ리ㅏㄴ어리ㅏㄴ우리ㅏ;ㄴㅇ'
+            input#chat-input(type="text")
+
