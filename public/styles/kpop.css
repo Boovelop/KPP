@@ -3,7 +3,11 @@ body {
 }
 section {
 	min-height: 80vh;
-	font-size: calc(0.1em + 0.8vw);
+	font-size: calc(0.1em + 1vw);
+}
+h2 {
+	margin: 0 1vw;
+	padding: 0;
 }
 
 /* K-POP의 역사 */
@@ -12,10 +16,101 @@ section {
 	width: 80vw;
 	height: 2000px;
 }
+.section-history img {
+	/* width: 17vw; */
+	height: 15vw;
+}
+
 .line {
 	margin: 0 auto;
 	content: '';
 	width: 0.5vw;
 	height: 0px;
 	background: black;
+}
+
+.line-left {
+	position: absolute;
+	content: '';
+	left: 100%;
+	right: -100%;
+	width: 100px;
+	height: 0.3vw;
+	background: black;
+	transition: 1s;
+}
+
+.on-line {
+	width: 300px;
+}
+
+.history-content {
+	position: absolute;
+	width: 44vw;
+	visibility: hidden;
+	transform: scale(0);
+	transition: 1s;
+}
+.on-content {
+	visibility: visible;
+	transform: scale(1);
+	transition: 1s;
+}
+.history-left ul {
+	float: left;
+}
+.history-right ul {
+	float: right;
+}
+.history-left img {
+	float: left;
+	vertical-align: top;
+}
+.history-right img {
+	float: right;
+	vertical-align: top;
+}
+
+.history-content p {
+	margin: 0 0.5vw 0.5vw 0.5vw;
+}
+.history-content-title {
+	padding-bottom: 0.5vw;
+	font-size: calc(0.3em + 1.5vw);
+	color: #dfdfdf;
+}
+.history-right .history-content-title {
+	text-align: right;
+}
+.history-content-text {
+	font-size: calc(0.2em + 1vw);
+	color: #a8a8a8;
+}
+
+.history-left {
+	left: 5%;
+	max-width: 100%;
+}
+.history-right {
+	right: 4%;
+	max-width: 100%;
+}
+
+.history-content:nth-of-type(1) {
+	top: 300px;
+}
+.history-content:nth-of-type(2) {
+	top: 600px;
+}
+.history-content:nth-of-type(3) {
+	top: 900px;
+}
+.history-content:nth-of-type(4) {
+	top: 1200px;
+}
+.history-content:nth-of-type(5) {
+	top: 1500px;
+}
+.history-content:nth-of-type(6) {
+	top: 1800px;
 }
