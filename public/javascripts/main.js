@@ -9,6 +9,9 @@ const mainObj = {
 		datasMax: 0,
 		interval: null,
 	},
+	album: {
+		jsonData: null,
+	},
 };
 
 window.addEventListener('load', function () {
@@ -24,6 +27,51 @@ window.addEventListener('load', function () {
 
 function main_headerPositionAbsolute() {
 	document.getElementById('header-logo').style.position = 'absolute';
+}
+
+function main_initVideo() {
+	const video = document.querySelector('#section-video>video');
+	mainObj.video.element = video;
+
+	const randVal = common_getRandomInt(0, mainObj.video.sources.length - 1);
+	mainObj.video.currentIdx = randVal;
+
+	video.src = mainObj.video.sources[randVal];
+
+	video.load();
+	video.addEventListener('ended', main_videoChange);
+}
+
+function main_initAlbum() {
+	common_getFiles('./public/images/albums').then(function (res) {
+		// 배열의 형태로 데이터가 들어온다.
+		if (res) {
+			// 태그 생성 및 리소스 설정
+			const slickRoot = document.querySelector('.album-slick');
+
+			let slickList, slickContent, slickImg, slickAlbumName, slickAlbumNameBg;
+
+			for (let i = 0; i < res.length; i++) {
+				slickList = document.createElement('div');
+
+				slickContent = document.createElement('div');
+				slickContent.classList.add('slick-content');
+
+				slickImg = document.createElement('img');
+				slickImg.src = `./images/albums/${res[i]}`;
+
+				slickAlbumName = document.createElement('p');
+				slickAlbumName.textContent = res[i].slice(0, res[i].length - 4);
+
+				slickContent.appendChild(slickImg);
+				slickContent.appendChild(slickAlbumName);
+				slickList.appendChild(slickContent);
+				slickRoot.appendChild(slickList);
+			}
+
+			main_initSlick();
+		}
+	});
 }
 
 function main_initSlick() {
@@ -51,18 +99,41 @@ function main_initSlick() {
 			},
 		],
 	});
-}
-function main_initVideo() {
-	const video = document.querySelector('#section-video>video');
-	mainObj.video.element = video;
 
-	const randVal = common_getRandomInt(0, mainObj.video.sources.length - 1);
-	mainObj.video.currentIdx = randVal;
+	// 서버에 파일을 요청해서 받는다.
+	common_getFile('./public/json', 'albumYoutubes.json').then(function (res) {
+		if (res) mainObj.album.jsonData = res.data;
+	});
 
-	video.src = mainObj.video.sources[randVal];
+	$('.album-slick').click(function (e) {
+		if (e.target.parentElement.classList == 'slick-content') {
+			const albumName = e.target.parentElement.lastChild.textContent;
+			console.log(albumName);
+			let youtubeUrl = 'https://www.youtube.com/embed/0-q1KafFCLU';
+			const $modal = $('#album-video-contanier');
+			const $content = $('#album-video');
+			let findIndex = -1;
 
-	video.load();
-	video.addEventListener('ended', main_videoChange);
+			for (let i = 0; i < mainObj.album.jsonData.length; i++) {
+				if (mainObj.album.jsonData[i].name == albumName) {
+					findIndex = i;
+					break;
+				}
+			}
+
+			if (findIndex != -1) {
+				youtubeUrl = mainObj.album.jsonData[findIndex].url;
+				$modal.css('display', 'block');
+				$content.html(`<iframe src="${youtubeUrl}" width="640" height="360" class="note-video-clip"></iframe>`);
+			}
+		}
+	});
+	$('#album-video-contanier').click(function (e) {
+		if (e.target == this) {
+			e.target.style.display = 'none';
+			$('#album-video').html('');
+		}
+	});
 }
 
 function main_videoChange(e) {
@@ -183,38 +254,4 @@ function main_stockRollingTextSet(parentEle, childIdx, datas, datasIdx) {
 
 	parentEle.childNodes[childIdx].childNodes[2].innerHTML += datas[datasIdx].diffVal;
 	parentEle.childNodes[childIdx].childNodes[3].textContent = datas[datasIdx].rate;
-}
-
-function main_initAlbum() {
-	common_getFiles('./public/images/albums').then(function (res) {
-		// 배열의 형태로 데이터가 들어온다.
-		if (res) {
-			// 태그 생성 및 리소스 설정
-			const slickRoot = document.querySelector('.album-slick');
-
-			let slickList, slickContent, slickImg, slickAlbumName, slickAlbumNameBg;
-
-			for (let i = 0; i < res.length; i++) {
-				slickList = document.createElement('div');
-
-				slickContent = document.createElement('div');
-				slickContent.classList.add('slick-content');
-
-				slickImg = document.createElement('img');
-				slickImg.src = `./images/albums/${res[i]}`;
-
-				slickAlbumName = document.createElement('p');
-				slickAlbumName.textContent = res[i].slice(0, res[i].length - 3);
-				slickAlbumNameBg = document.createElement('div');
-				slickAlbumName.appendChild(slickAlbumNameBg);
-
-				slickContent.appendChild(slickImg);
-				slickContent.appendChild(slickAlbumName);
-				slickList.appendChild(slickContent);
-				slickRoot.appendChild(slickList);
-			}
-
-			main_initSlick();
-		}
-	});
 }

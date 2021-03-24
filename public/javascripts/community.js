@@ -1,266 +1,245 @@
 const communityObj = {
-    table: null,
-    tableDatas: null,
-    viewSections: {
-        board: null,
-        chat: null,
-    },
-    warpElements: {
-        board: null,
-        chat: null,
-    },
+	table: null,
+	tableDatas: null,
+	viewSections: {
+		board: null, // 게시판 view
+		chat: null, // 실시간 채팅 view
+	},
+	warpElements: {
+		board: null, // 게시판 a tag 버튼
+		chat: null, // 실시간 채팅 a tag 버튼
+	},
+	chat: {
+		elements: {
+			list: null, // 실시간 채팅 글 목록
+			inputNickName: null, // 채팅 닉네임
+			inputMessage: null, // 채팅 내용
+		},
+		styles: {
+			inputBorder: [],
+		},
+	},
 };
 
-// const socket = io.connect('http://localhost/community', {
-//     // 네임스페이스
-//     path: '/socket.io',
-// });
-
-const socket = io();
-
-console.log(socket);
+const socket = io('/chat');
 
 window.addEventListener('load', function (e) {
-    community_initObj();
-    community_initEvent();
-    community_initTables();
+	community_initObj();
+	community_initEvent();
+	community_initTables();
+	community_initChat();
 });
 
 function community_initObj() {
-    communityObj.viewSections.board = document.getElementsByClassName('section-board')[0];
-    communityObj.viewSections.chat = document.getElementsByClassName('section-chat')[0];
-    communityObj.warpElements.board = document.getElementById('warp-board');
-    communityObj.warpElements.chat = document.getElementById('warp-chat');
+	communityObj.viewSections.board = document.getElementsByClassName('section-board')[0];
+	communityObj.viewSections.chat = document.getElementsByClassName('section-chat')[0];
+	communityObj.warpElements.board = document.getElementById('warp-board');
+	communityObj.warpElements.chat = document.getElementById('warp-chat');
+	communityObj.chat.elements.list = document.getElementById('chat-list');
+	communityObj.chat.elements.inputNickName = document.getElementById('chat-user-name');
+	communityObj.chat.elements.inputMessage = document.getElementById('chat-input');
 }
 
 function community_initEvent() {
-    document.getElementById('write').addEventListener('click', community_onClickWriteBtn);
-    communityObj.warpElements.board.addEventListener('click', community_onClickWarpBoard);
-    communityObj.warpElements.chat.addEventListener('click', community_onClickWarpChat);
+	document.getElementById('write').addEventListener('click', community_onClickWriteBtn);
+	communityObj.warpElements.board.addEventListener('click', community_onClickWarpBoard);
+	communityObj.warpElements.chat.addEventListener('click', community_onClickWarpChat);
+	communityObj.chat.elements.inputMessage.addEventListener('keydown', community_keyDownSendChatMessageEvent);
+	document.getElementById('chat-send').addEventListener('click', community_sendChatMessage);
 
-    community_onClickWarpBoard();
+	community_onClickWarpBoard();
 }
 
 async function community_initTables() {
-    const datas = await community_getTablesData();
+	const datas = await community_getTablesData();
 
-    communityObj.table = $('#board-table').DataTable({
-        data: datas,
-        columns: [
-            {
-                title: '제목',
-                data: 'title',
-                className: 'column-title',
-                render: function (data, type, row, meta) {
-                    return `<a href="#">${data}</a>`;
-                },
-            },
-            { title: '작성자', data: 'author', className: 'column-author' },
-            { title: '작성일', data: 'created_at', className: 'column-dateCreated', searchable: false },
-            { title: '조회수', data: 'views', className: 'column-views', searchable: false },
-        ],
+	communityObj.table = $('#board-table').DataTable({
+		data: datas,
+		columns: [
+			{
+				title: '제목',
+				data: 'title',
+				className: 'column-title',
+				render: function (data, type, row, meta) {
+					return `<a href="#">${data}</a>`;
+				},
+			},
+			{ title: '작성자', data: 'author', className: 'column-author' },
+			{ title: '작성일', data: 'created_at', className: 'column-dateCreated', searchable: false },
+			{ title: '조회수', data: 'views', className: 'column-views', searchable: false },
+		],
 
-        order: [[2, 'desc']], // 작성일을 기준으로 내림차순 정렬을 기본으로 설정
+		order: [[2, 'desc']], // 작성일을 기준으로 내림차순 정렬을 기본으로 설정
 
-        language: {
-            emptyTable: '작성된 글이 없습니다.',
-            lengthMenu: '페이지당 _MENU_ 개씩 보기',
-            info: '현재 _START_ - _END_ / _TOTAL_건',
-            infoEmpty: '데이터 없음',
-            infoFiltered: '( _MAX_건의 데이터에서 필터링 됨 )',
-            search: '<i class="fas fa-search"></i>',
-            zeroRecords: '검색과 일치하는 데이터가 없습니다.',
-            loadingRecords: '로딩중...',
-            processing: '잠시만 기다려 주세요~',
-            paginate: {
-                first: '처음',
-                next: '다음',
-                previous: '이전',
-                last: '끝',
-            },
-        },
+		language: {
+			emptyTable: '작성된 글이 없습니다.',
+			lengthMenu: '페이지당 _MENU_ 개씩 보기',
+			info: '현재 _START_ - _END_ / _TOTAL_건',
+			infoEmpty: '데이터 없음',
+			infoFiltered: '( _MAX_건의 데이터에서 필터링 됨 )',
+			search: '<i class="fas fa-search"></i>',
+			zeroRecords: '검색과 일치하는 데이터가 없습니다.',
+			loadingRecords: '로딩중...',
+			processing: '잠시만 기다려 주세요~',
+			paginate: {
+				first: '처음',
+				next: '다음',
+				previous: '이전',
+				last: '끝',
+			},
+		},
 
-        pagingType: 'full_numbers',
+		pagingType: 'full_numbers',
 
-        responsive: true, // 반응형, 폭이 좁아지면 + 기호가 표시되고, 클릭하면 하단에 나머지 컬럼이 보인다.
-        autoWidth: true, // 컬럼 자동 폭 조정
-    });
+		responsive: true, // 반응형, 폭이 좁아지면 + 기호가 표시되고, 클릭하면 하단에 나머지 컬럼이 보인다.
+		autoWidth: true, // 컬럼 자동 폭 조정
+	});
 
-    // 제목 클릭 처리
-    $('#board-table tbody').on('click', '.column-title', community_onClickBoardTitle);
+	// 제목 클릭 처리
+	$('#board-table tbody').on('click', '.column-title', community_onClickBoardTitle);
+}
 
-    // $(document).ready(function() {
+function community_initChat() {
+	// 채팅 스크롤 최 하단으로 이동
+	communityObj.chat.elements.list.scrollTop = communityObj.chat.elements.list.scrollHeight;
 
-    // 	var strIconSearch = '<i class="fas fa-search"></i>';
-    // 	var tableTitle = 'Summary of Employees';
-    // 	var tableSubTitle = 'Current Listing of Active Employees';
-    // 	var tableBS4 = $('#dtPluginExample').DataTable( {
-    // 		language: {
-    // 			lengthMenu: "Show _MENU_ Entries",
-    // 			search: strIconSearch,
-    // 			info: "Showing _START_ to _END_ of _TOTAL_ Entries"
-    // 		},
-    // 		pageLength: 10,
-    // 		searching: true,
-    // 		info: true,
-    // 		columnDefs: [
-    // 			{ targets: [0], className:'text-center bg-warning' },
-    // 			{ targets: [1, 2], className:'text-left bg-light' },
-    // 		],
-    // 		buttons: {
-    // 			buttons: [
-    // 				{ extend: 'copyHtml5',
-    // 					text: '<i class="fas fa-copy"></i>',
-    // 					className: 'btn-primary',
-    // 					title: tableTitle,
-    // 					messageTop: tableSubTitle,
-    // 					titleAttr: 'Copy to Clipboard'
-    // 				},
-    // 				{ extend: 'csvHtml5',
-    // 					text: '<i class="fas fa-file-csv"></i>',
-    // 					className: 'btn-primary',
-    // 					titleAttr: 'Export to CSV'
-    // 				},
-    // 				{ extend: 'excelHtml5',
-    // 					text: '<i class="fas fa-file-excel"></i>',
-    // 					className: 'btn-primary',
-    // 					title: tableTitle,
-    // 					messageTop: tableSubTitle,
-    // 					titleAttr: 'Export to Excel'
-    // 				},
-    // 				{ extend: 'pdfHtml5',
-    // 					text: '<i class="fas fa-file-pdf"></i>',
-    // 					className: 'btn-primary',
-    // 					title: tableTitle,
-    // 					messageTop: tableSubTitle,
-    // 					titleAttr: 'Export to PDF'
-    // 				},
-    // 				{ extend: 'print',
-    // 					text: '<i class="fas fa-print"></i>',
-    // 					className: 'btn-primary',
-    // 					title: tableTitle,
-    // 					messageTop: tableSubTitle,
-    // 					titleAttr: 'Print Table'
-    // 				},
-    // 				{ extend: 'colvis',
-    // 					text: '<i class="fas fa-columns"></i>',
-    // 					className: 'btn-primary',
-    // 					titleAttr: 'Show/Hide Columns'
-    // 				}
-    // 			],
-    // 			dom: {
-    // 				   button: {
-    // 				className: 'btn'
-    // 				}
-    // 			}
-    // 		}
-    // 	});
+	const userName = communityObj.chat.elements.inputNickName.value;
+	if (userName) {
+		communityObj.chat.elements.inputNickName.disabled = true;
+	}
+	common_setElementStyle(communityObj.chat.elements.inputNickName, 'color', userColor);
 
-    // 	// Add a row for the Title & Subtitle in front of the first row of the wrapper
-    // 	var divTitle = ''
-    // 		+ '<div class="col-12 text-center text-md-left">'
-    // 		+ '<h4 class="text-primary">' + tableTitle + '</h4>'
-    // 		+ '<h5 class="text-primary">' + tableSubTitle + '</h5>'
-    // 		+ '<hr class="m-0 mb-4" style="border:none; background-color:rgba(0,75,141,1.0); color:rgba(0,75,141,1.0); height:1px;" />'
-    // 		+ '</div>';
-    // 	$( divTitle ).prependTo( '#dtPluginExample_wrapper .row:eq(0)' );
+	// 메세지 받는 소켓
+	socket.on('receive_message', function (data) {
+		const messsageContainer = document.createElement('li');
+		messsageContainer.classList.add('chat-message-container');
 
-    // 	// Insert the Button Toolbar in front of the first row of the wrapper.
-    // 	// Had to add BS4-Classes first for proper Responsive/Horizontal Alignment.
-    // 	tableBS4.buttons().container().addClass("justify-content-center justify-content-md-start mb-3");
-    // 	tableBS4.buttons().container().prependTo( '#dtPluginExample_wrapper .col-12:eq(0)' );
+		// 내가 보낸 메세지인지 아닌지 확인 및 class 선택자 추가
+		if (data.userColor == userColor) messsageContainer.classList.add('mine');
+		else messsageContainer.classList.add('other');
 
-    // 	// Table Header
-    // 	//    1. Remove BS4-Classes for Background set in the columnDefs Options above,
-    // 	//    2. Add BS4-Class for White Text on Black Background
-    // 	//    3. Reduce Font Size
-    // 	// $('#dtPluginExample thead tr th').removeClass("bg-warning bg-light bg-success").addClass("bg-dark text-white").css("font-size", "0.85rem");
-    // 	$('thead tr th').removeClass("bg-warning bg-light bg-success").addClass("bg-dark text-white").css("font-size", "0.85rem");
+		const nameTag = document.createElement('p');
+		nameTag.classList.add('chat-message-name');
+		nameTag.style.color = data.userColor;
+		nameTag.textContent = data.name;
 
-    // 	// Table Footer
-    // 	//    1. Remove BS4-Classes for Background set in the columnDefs Options above,
-    // 	//    2. Add BS4-Class for White Text on Black Background
-    // 	//    3. Reduce Font Size
-    // 	//    4. Remove Horizontal Alignments set above and reassign for Totals.
-    // 	$('tfoot tr th').removeClass("bg-warning bg-light bg-success text-left text-center text-right").addClass("bg-dark text-white").css("font-size", "0.85rem");
-    // 	$('tfoot tr th:eq(1)').addClass("text-left");
-    // 	$('tfoot tr th:eq(6)').addClass("text-right");
+		const messageTag = document.createElement('p');
+		messageTag.classList.add('chat-message-text');
+		messageTag.textContent = data.message;
 
-    // 	// Table Body
-    // 	//    1. Reduce Font Size
-    // 	// $('#dtPluginExample tbody tr td').css("font-size", "0.90rem");		 	// This did not work for records beyond initial rendering.  See CSS.
-    // 	// $('#dtPluginExample tbody tr td').addClass("atr-datatables-bs4-td");		// This did not work for records beyond initial rendering.  See CSS.
+		const clearBothTag = document.createElement('div');
+		clearBothTag.classList.add('clear');
 
-    // 	$("input.form-control.form-control-sm").attr('placeholder', 'Search...');
-    // 	$("input.form-control.form-control-sm").attr('size', 30);
+		messsageContainer.appendChild(nameTag);
+		messsageContainer.appendChild(messageTag);
 
-    // 	// Button Toolbar & DataTables Dropdown - Add BS4-Class for Vertical Alignment (in first of 2 columns)
-    // 	$('#dtPluginExample_wrapper .col-md-6:eq(0)').addClass("align-self-end");
+		communityObj.chat.elements.list.appendChild(messsageContainer);
+		communityObj.chat.elements.list.appendChild(clearBothTag);
 
-    // 	// Search Box - Add BS4-Class for Vertical Alignment (in second of 2 columns)
-    // 	$('#dtPluginExample_wrapper .col-md-6:eq(1)').addClass("align-self-end");
-
-    // 	// Pagination - Add BS4-Class for Horizontal Alignment (in second of 2 columns) & Top Margin
-    // 	$('#dtPluginExample_wrapper .col-md-7:eq(0)').addClass("d-flex justify-content-center justify-content-md-end");
-    // 	$('#dtPluginExample_paginate').addClass("mt-3 mt-md-2");
-
-    // });
+		// 채팅 스크롤 최 하단으로 이동
+		communityObj.chat.elements.list.scrollTop = communityObj.chat.elements.list.scrollHeight;
+	});
 }
 
 async function community_getTablesData() {
-    const response = await common_getBoards();
+	const response = await common_getBoards();
 
-    for (let i = 0; i < response.length; i++) {
-        response[i].created_at = common_getCreatedAtFormat(response[i].created_at);
-    }
+	for (let i = 0; i < response.length; i++) {
+		response[i].created_at = common_getCreatedAtFormat(response[i].created_at);
+	}
 
-    communityObj.tableDatas = response;
+	communityObj.tableDatas = response;
 
-    return response;
+	return response;
 }
 
 // 게시판 글 클릭시 호출되는 콜백 함수
 function community_onClickBoardTitle(e) {
-    // 테이블의 데이터를 가져온다. data는 테이블에서 설정한 "columns"이며  배열형태로 되어있다.
-    // const data = boardObj.table.row(this).data();
+	// 테이블의 데이터를 가져온다. data는 테이블에서 설정한 "columns"이며  배열형태로 되어있다.
+	// const data = boardObj.table.row(this).data();
 
-    const index = communityObj.table.row(this)[0];
-    const data = communityObj.tableDatas[index];
+	const index = communityObj.table.row(this)[0];
+	const data = communityObj.tableDatas[index];
 
-    window.location.replace(`/selectBoard?id=${data.id}&title=${data.title}`);
+	window.location.replace(`/selectBoard?id=${data.id}&title=${data.title}`);
 }
 
 function community_onClickWriteBtn(e) {
-    e.preventDefault();
+	e.preventDefault();
 
-    common_loginCheck().then(function (response) {
-        if (!response.isLogin) {
-            Swal.fire({
-                icon: 'error',
-                text: '글쓰기에 로그인이 필요합니다!',
-            });
-            return;
-        }
-        window.location.replace('/write');
-    });
+	common_loginCheck().then(function (response) {
+		if (!response.isLogin) {
+			Swal.fire({
+				icon: 'error',
+				text: '글쓰기에 로그인이 필요합니다!',
+			});
+			return;
+		}
+		window.location.replace('/write');
+	});
 }
 // 게시판 클릭시 호출되는 함수
 function community_onClickWarpBoard(e) {
-    community_setWarpState(true);
+	community_setWarpState(true);
 }
 
 // 실시간 채팅 클릭시 호출되는 함수
 function community_onClickWarpChat(e) {
-    community_setWarpState(false);
+	community_setWarpState(false);
 }
 
 function community_setWarpState(isBoard) {
-    communityObj.viewSections.chat.hidden = isBoard;
-    communityObj.viewSections.board.hidden = !isBoard;
+	communityObj.viewSections.chat.hidden = isBoard;
+	communityObj.viewSections.board.hidden = !isBoard;
 
-    const activeColor = '#0066ff';
-    const inActiveColor = 'black';
+	const activeColor = '#0066ff';
+	const inActiveColor = 'black';
 
-    common_setElementStyle(communityObj.warpElements.board, 'color', isBoard == true ? activeColor : inActiveColor);
-    common_setElementStyle(communityObj.warpElements.chat, 'color', isBoard == true ? inActiveColor : activeColor);
+	common_setElementStyle(communityObj.warpElements.board, 'color', isBoard == true ? activeColor : inActiveColor);
+	common_setElementStyle(communityObj.warpElements.chat, 'color', isBoard == true ? inActiveColor : activeColor);
+}
+
+function community_keyDownSendChatMessageEvent(e) {
+	// 엔터키 확인 후 보내기 기능 호출
+	if (e.keyCode == 13) community_sendChatMessage(e);
+}
+
+// 채팅에서 보내기 버튼 클릭시 호출되는 함수
+function community_sendChatMessage(e) {
+	e.preventDefault();
+
+	if (!communityObj.chat.elements.inputNickName.value) {
+		community_sendChatErrorAnimation(communityObj.chat.elements.inputNickName, communityObj.chat.styles.inputBorder[0]);
+		return;
+	}
+	if (!communityObj.chat.elements.inputMessage.value) {
+		community_sendChatErrorAnimation(communityObj.chat.elements.inputMessage, communityObj.chat.styles.inputBorder[1]);
+		return;
+	}
+
+	socket.emit('send_message', {
+		name: communityObj.chat.elements.inputNickName.value,
+		message: communityObj.chat.elements.inputMessage.value,
+	});
+
+	communityObj.chat.elements.inputMessage.value = '';
+	communityObj.chat.elements.inputMessage.focus();
+}
+
+const animateOptions = ['animate__animated', 'animate__headShake'];
+function community_sendChatErrorAnimation(element, saveStyle) {
+	// 애니메이션 추가
+	element.classList.add(animateOptions[0], animateOptions[1]);
+	element.style.setProperty('--animate-duration', '0.5s');
+
+	saveStyle = element.style.border;
+	common_setElementStyle(element, 'border', '1px solid red');
+
+	// 애니메이션 끝나는 이벤트 처리
+	element.addEventListener('animationend', function (e) {
+		e.target.classList.remove(animateOptions[0], animateOptions[1]);
+
+		e.target.style.border = saveStyle;
+		// common_setElementStyle(e.target, 'border', '1px solid black');
+	});
 }

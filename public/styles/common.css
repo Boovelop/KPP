@@ -40,8 +40,7 @@ a:hover {
 .modal {
 	display: none;
 	position: fixed;
-	z-index: 5;
-	padding-top: 100px;
+	z-index: 10;
 	left: 0;
 	top: 0;
 	width: 100%;
@@ -54,18 +53,5 @@ a:hover {
 .modal-content {
 	margin: auto;
 	display: block;
-	width: 80%;
-	max-width: 700px;
-
-	animation-name: zoom;
-	animation-duration: 0.6s;
-}
-
-@keyframes zoom {
-	from {
-		transform: scale(0);
-	}
-	to {
-		transform: scale(1);
-	}
+	/* width: 80%; */
 }

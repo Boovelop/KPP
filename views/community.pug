@@ -35,8 +35,14 @@ block section
             button#write 글쓰기
 
         .section-chat
-            #chat-list
-                -for(let i = 0; i < 20; ++i)
-                    p=i + 'ㅋㅋㅋㅋzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzdfasdfㄴㅇ라부리ㅏㅇ뤂ㅇㄴ;ㅣ뤂ㅎ이ㅏ러ㅣ라ㅓㅇ니;런ㅇ리ㅏㄴ어리ㅏㄴ우리ㅏ;ㄴㅇ'
-            input#chat-input(type="text")
+            ul#chat-list
+            #chat-input-container
+                span 닉네임 : 
+                input#chat-user-name(value=userUniqueName)
+                input#chat-input(type="text")
+                button#chat-send 보내기
 
+    //- 스크립트에서 데이터 받는 방법
+    script.
+        const userColor= '#{userColor}';
+        console.log(userColor);

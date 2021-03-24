@@ -1,3 +1,17 @@
+const chat = require('./sockets/chat');
+const cookieParser = require('cookie-parser');
+
+function mainSocket(app) {
+	const io = app.io;
+	chat(io);
+
+	io.use((socket, next) => {
+		cookieParser(process.env.COOKIE_SECRET)(socket.request, socket.request.res, next);
+		app.sessionMiddleware(socket.request, socket.request.res, next);
+	});
+}
+
+module.exports = mainSocket;
 // const SocketIO = require('socket.io');
 // const cookieParser = require('cookie-parser');
 
@@ -21,8 +35,5 @@
 //         console.log('소켓 접속을 해제했다');
 //     });
 // };
-
-const app = require('./app').app;
-const SocketIO = require('socket.io');
 
 // https://velog.io/@imkj1/node-express-socket

@@ -1,12 +1,21 @@
-.section-history {
-    background: rgb(27, 27, 27);
+body {
+	background: #3a3a3a;
+}
+section {
+	min-height: 80vh;
+	font-size: calc(0.1em + 0.8vw);
 }
 
-.section-cheering {
-    margin: 2vw auto;
-    width: 50vw;
-    height: 20vw;
-    background: white;
-    border: 0.25vw solid black;
-    border-radius: 1vw;
+/* K-POP의 역사 */
+.section-history {
+	margin: 50px auto;
+	width: 80vw;
+	height: 2000px;
+}
+.line {
+	margin: 0 auto;
+	content: '';
+	width: 0.5vw;
+	height: 0px;
+	background: black;
 }

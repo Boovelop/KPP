@@ -48,10 +48,12 @@
 
 #stock-today {
 	position: absolute;
+	padding: 2px;
 	margin-left: 10px;
 	font-weight: 300;
 	color: rgb(46, 46, 46);
-	background: #ffffff75;
+	background: #ffffff9f;
+	transform: translateY(-2px);
 }
 
 /* 주가 롤링 텍스트 */
@@ -193,6 +195,12 @@
 
 .album-slick > button > img:hover {
 	filter: opacity(0.9) invert(34%) sepia(77%) saturate(6109%) hue-rotate(211deg) brightness(102%) contrast(104%);
+}
+
+#album-video {
+	width: 640px;
+	height: 360px;
+	transform: translateY(calc(50% + 120px));
 }
 
 /* 메세지 */

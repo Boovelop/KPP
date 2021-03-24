@@ -4,22 +4,22 @@ const Board = require('../models/board');
 
 router.get('/', function (req, res, next) {
 	req.session.returnTo = req.path;
-	res.render('./main.pug', { title: 'KPP - K-POP Pen Site', session_userId: req.session.userId });
+	res.render('./main.pug', { title: 'KPP - K-POP Pen Site' });
 });
 
 router.get('/kpop', function (req, res, next) {
 	req.session.returnTo = req.path;
-	res.render('./kpop.pug', { title: 'KPP - K-POP', session_userId: req.session.userId });
+	res.render('./kpop.pug', { title: 'KPP - K-POP' });
 });
 
 router.get('/community', function (req, res, next) {
 	req.session.returnTo = req.path;
-	res.render('./community.pug', { title: 'KPP - Community', session_userId: req.session.userId });
+	res.render('./community.pug', { title: 'KPP - Community', userUniqueName: req.session.user_uniqueName, userColor: req.session.color });
 });
 
 router.get('/store', function (req, res, next) {
 	req.session.returnTo = req.path;
-	res.render('./store.pug', { title: 'KPP - Store', session_userId: req.session.userId });
+	res.render('./store.pug', { title: 'KPP - Store' });
 });
 
 router.get('/write', function (req, res, next) {
