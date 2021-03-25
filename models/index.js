@@ -3,15 +3,17 @@ const User = require('./user');
 const Board = require('./board');
 const Comment = require('./comment');
 
+require('dotenv').config();
+
 // 연결할 데이터베이스 정보
 const config = process.env.NODE_ENV || {
-	username: 'root',
-	password: '1234',
-	database: 'kpp',
-	host: '127.0.0.1',
-	port: 3306,
-	dialect: 'mysql',
-	timezone: '+00:00',
+    username: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASS,
+    database: process.env.DATABASE_NAME,
+    host: process.env.DATABASE_HOST,
+    port: process.env.DATABASE_PORT,
+    dialect: 'mysql',
+    timezone: '+00:00',
 };
 const db = {};
 let sequelize = new Sequelize(config.database, config.username, config.password, config);
