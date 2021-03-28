@@ -3,8 +3,8 @@ const kpopObj = {
 		$element: null,
 		handler: null,
 		height: 0,
-		speed: 5,
-		stopTimer: 500,
+		speed: 2,
+		stopTimer: 1500,
 	},
 	lineChecker: {
 		handler: null,
