@@ -1,37 +1,37 @@
 {
-    "name": "kpp",
-    "version": "0.0.1",
-    "private": false,
-    "scripts": {
-        "start": "nodemon web.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Goblin820/KPP"
-    },
-    "dependencies": {
-        "axios": "^0.21.1",
-        "cheerio": "^1.0.0-rc.5",
-        "color-hash": "^1.0.3",
-        "cookie-parser": "^1.4.5",
-        "debug": "^2.6.9",
-        "dotenv": "^8.2.0",
-        "express": "^4.17.1",
-        "express-session": "^1.17.1",
-        "iconv-lite": "^0.4.24",
-        "morgan": "^1.10.0",
-        "multer": "^1.4.2",
-        "mysql2": "^2.2.5",
-        "passport": "^0.4.1",
-        "passport-kakao": "^1.0.1",
-        "pug": "^3.0.1",
-        "pug-static": "^1.0.0",
-        "sequelize": "^6.5.0",
-        "sequelize-cli": "^6.2.0",
-        "sharp": "^0.27.2",
-        "socket.io": "^2.4.1"
-    },
-    "devDependencies": {
-        "nodemon": "^2.0.7"
-    }
+	"name": "kpp",
+	"version": "0.0.1",
+	"private": false,
+	"scripts": {
+		"start": "nodemon web.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Goblin820/KPP"
+	},
+	"dependencies": {
+		"axios": "^0.21.1",
+		"cheerio": "^1.0.0-rc.5",
+		"color-hash": "^1.0.3",
+		"cookie-parser": "^1.4.5",
+		"debug": "^2.6.9",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"express-session": "^1.17.1",
+		"iconv-lite": "^0.4.24",
+		"morgan": "^1.10.0",
+		"multer": "^1.4.2",
+		"mysql2": "^2.2.5",
+		"passport": "^0.4.1",
+		"passport-kakao": "^1.0.1",
+		"pug": "^3.0.1",
+		"pug-static": "^1.0.0",
+		"sequelize": "^6.5.0",
+		"sequelize-cli": "^6.2.0",
+		"sharp": "^0.27.2",
+		"socket.io": "^2.4.1"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.7"
+	}
 }

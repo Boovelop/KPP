@@ -100,7 +100,7 @@ router.get('/loginCheck', async function (req, res, next) {
 
 router.get('/kakao/logout', function (req, res, next) {
 	// 카카오계정과 함께 로그아웃 페이지로 이동(유저가 사이트 로그아웃과, 카카오 로그아웃 선택이 가능)
-	const callbackRoute = 'http://localhost/auth/kakao/logout/callback';
+	const callbackRoute = `http://${req.host}:${process.env.PORT}/auth/kakao/logout/callback`;
 	res.redirect(`https://kauth.kakao.com/oauth/logout?client_id=${process.env.KAKAO_KEY}&logout_redirect_uri=${callbackRoute}`);
 });
 
