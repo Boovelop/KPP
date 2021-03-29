@@ -32,9 +32,12 @@ function writePage_initSummerNote() {
         fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72'],
 
         callbacks: {
-            onImageUpload: function (files) {
-                console.log(files);
-                // uploadSummernoteImageFile(files[0],this);
+            onImageUpload: function (files, editor, welEditable) {
+                if (files.length) {
+                    for (let i = 0; i < files.length; i++) {
+                        write_sendImageFile(files[i], this);
+                    }
+                }
             },
             // onPaste: function (e) {
             // 	var clipboardData = e.originalEvent.clipboardData;
@@ -92,5 +95,24 @@ function writePage_onClickSubmitBtn(e) {
                 window.location.href = '/community';
             });
         }
+    });
+}
+
+function write_sendImageFile(file, element) {
+    // file.type
+
+    const formData = new FormData();
+    formData.append('file', file);
+    $.ajax({
+        url: '/files/file/image',
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        enctype: 'multipart/form-data',
+        processData: false,
+        data: formData,
+        success: function (res) {
+            console.log(res);
+        },
     });
 }
