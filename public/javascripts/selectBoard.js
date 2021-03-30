@@ -61,7 +61,7 @@ async function selectBoard_initDataSet() {
 
     // 게시판 설정
     document.getElementById('author').innerText = boardResponse.author;
-    document.getElementById('create_at').innerText = common_getCreatedAtFormat(boardResponse.created_at);
+    document.getElementById('create_at').innerText = boardResponse.created_at;
 
     selectBoard_setModifyMode(false);
 

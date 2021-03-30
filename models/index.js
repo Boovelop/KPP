@@ -13,7 +13,12 @@ const config = process.env.NODE_ENV || {
     host: process.env.DATABASE_HOST,
     port: process.env.DATABASE_PORT,
     dialect: 'mysql',
-    timezone: '+00:00',
+    dialectOptions: {
+        useUTC: true, // UTC시간 기준으로 설정한다.
+        dateStrings: true, // ! 데이터 로드시 문자열로 가저옴
+        typeCast: true, // ! 타임존을 역으로 계산하지 않음
+    },
+    timezone: '+09:00', // KST시간으로 설정
 };
 const db = {};
 let sequelize = new Sequelize(config.database, config.username, config.password, config);

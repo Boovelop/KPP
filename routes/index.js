@@ -3,41 +3,41 @@ const router = express.Router();
 const Board = require('../models/board');
 
 router.get('/', function (req, res, next) {
-	req.session.returnTo = req.path;
-	res.render('./main.pug', { title: 'KPP - K-POP Pen Site' });
+    req.session.returnTo = req.path;
+    res.render('./main.pug', { title: 'KPP - K-POP People' });
 });
 
 router.get('/kpop', function (req, res, next) {
-	req.session.returnTo = req.path;
-	res.render('./kpop.pug', { title: 'KPP - K-POP' });
+    req.session.returnTo = req.path;
+    res.render('./kpop.pug', { title: 'KPP - K-POP' });
 });
 
 router.get('/community', function (req, res, next) {
-	req.session.returnTo = req.path;
-	res.render('./community.pug', { title: 'KPP - Community', userUniqueName: req.session.user_uniqueName, userColor: req.session.color });
+    req.session.returnTo = req.path;
+    res.render('./community.pug', { title: 'KPP - Community', userUniqueName: req.session.user_uniqueName, userColor: req.session.color });
 });
 
 router.get('/store', function (req, res, next) {
-	req.session.returnTo = req.path;
-	res.render('./store.pug', { title: 'KPP - Store' });
+    req.session.returnTo = req.path;
+    res.render('./store.pug', { title: 'KPP - Store' });
 });
 
 router.get('/write', function (req, res, next) {
-	req.session.returnTo = req.path;
-	res.render('./write.pug', { title: 'KPP - Write', author: req.session.user_uniqueName });
+    req.session.returnTo = req.path;
+    res.render('./write.pug', { title: 'KPP - Write', author: req.session.user_uniqueName });
 });
 
 router.get('/selectBoard', async function (req, res, next) {
-	req.session.returnTo = `${req.path}?id=${req.query.id}&title=${req.query.title}`;
-	req.session.selectedBoardId = req.query.id;
+    req.session.returnTo = `${req.path}?id=${req.query.id}&title=${req.query.title}`;
+    req.session.selectedBoardId = req.query.id;
 
-	const board = await Board.findOne({
-		where: { id: req.query.id },
-	});
-	// 조회수를 증가시킨다.
-	board.increment('views', { by: 1 });
+    const board = await Board.findOne({
+        where: { id: req.query.id },
+    });
+    // 조회수를 증가시킨다.
+    board.increment('views', { by: 1 });
 
-	res.render('./selectBoard.pug', { title: 'KPP - ' + req.query.title });
+    res.render('./selectBoard.pug', { title: 'KPP - ' + req.query.title });
 });
 
 module.exports = router;
