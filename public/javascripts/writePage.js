@@ -2,6 +2,8 @@ const writePageObj = {
     summerNoteElem: null,
     image: {
         files: [],
+        elements: [],
+        fileInfos: [],
     },
 };
 
@@ -41,7 +43,6 @@ function writePage_initSummerNote() {
                     // 오름차순으로 우선 업데이트 하는 기준으로 반복순회
                     for (let i = files.length - 1; i >= 0; i--) {
                         write_tempImageFile(files[i], this);
-                        // write_sendImageFile(files[i], this);
                     }
                 }
             },
@@ -59,6 +60,22 @@ function writePage_initSummerNote() {
 }
 async function writePage_onClickSubmitBtn(e) {
     e.preventDefault();
+
+    const imageSelectors = document.querySelectorAll('div.note-editable img');
+
+    const src = imageSelectors[0].getAttribute('src');
+    const fileName = imageSelectors[0].getAttribute('filename');
+    const fileData = dataURLtoFile(src, fileName);
+    console.log(fileData);
+    // console.log(imageSelectors);
+    const realFiles = [];
+    for (let i = 0; i < imageSelectors.length; i++) {
+        // const findIdx = writePageObj.image.elements.indexOf(imageSelectors[i]);
+        // if (findIdx != -1) {
+        //     realFiles.push(writePageObj.image.files[findIdx]);
+        // }
+    }
+    console.log(realFiles);
 
     // var imgUrl = [$('#jq-file-input').val()];
     // console.log(imgUrl);
@@ -109,18 +126,25 @@ async function writePage_onClickSubmitBtn(e) {
 }
 function write_tempImageFile(file, editor) {
     const reader = new FileReader();
-    writePageObj.image.files.push(file);
 
-    reader.onload = function (event) {
-        $(editor).summernote('insertImage', event.target.result, file.name);
-        setTimeout(() => {
-            const dd = document.querySelectorAll('div.note-editable img')[writePageObj.image.files.length - 1];
-            console.log(dd.getAttribute('data-filename'));
-        }, 500);
+    const currentIdx = writePageObj.image.files.length;
+    const saveFileData = file.lastModifiedDate + file.name + file.size;
+
+    // 파일 로드가 끝나면 호출될 이벤트 함수
+    reader.onload = function (e) {
+        $(editor)
+            .summernote('insertImage', e.target.result, file.name)
+            .then(function () {
+                // 썸머노트에 이미지 삽입이 끝난 후 해당 이미지 선택자를 찾아서
+                // 고유 데이터를 추가해준다.
+                const currentImg = document.querySelectorAll('div.note-editable img')[currentIdx];
+                writePageObj.image.elements.push(currentImg);
+            });
     };
+    writePageObj.image.files.push(file);
+    writePageObj.image.fileInfos.push(saveFileData);
 
     reader.readAsDataURL(file);
-    console.log(file);
 }
 
 function write_sendImageFile(file, editor) {
@@ -165,3 +189,20 @@ function write_sendImageFile(file, editor) {
         },
     });
 }
+
+const dataURLtoFile = (dataurl, fileName) => {
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], fileName, { type: mime });
+};
+
+//Usage example:
+// var file = dataURLtoFile('data:text/plain;base64,aGVsbG8gd29ybGQ=', 'hello.txt');
