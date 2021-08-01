@@ -20,10 +20,10 @@ passport.use(
 			callbackURL: '/auth/kakao/callback',
 		},
 		async (accessToken, refreshToken, profile, done) => {
-			console.log('accesstoken:', accessToken);
+			//console.log('accesstoken:', accessToken);
 
 			kakaoData.accessToken = accessToken;
-			console.log('userName:', profile);
+			//console.log('userName:', profile);
 
 			const user = await User.findOne({ where: { user_id: profile.id } });
 			if (user) {
@@ -74,7 +74,7 @@ router.get('/kakao/login/success/front', function (req, res, next) {
 	);
 });
 router.get('/kakao/login/fail', function (req, res, next) {
-	console.log(req.user);
+	//console.log(req.user);
 	res.redirect(`/auth/kakao/login/fail/front`);
 });
 router.get('/kakao/login/fail/front', function (req, res, next) {

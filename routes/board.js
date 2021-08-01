@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
 const Board = require('../models/board');
 
 // ------- 게시판 라우트 ------- //

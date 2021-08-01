@@ -51,6 +51,7 @@ try {
 } catch (err) {
     fs.mkdirSync(uploadFolderPath);
 }
+
 const imgUpload = multer({
     storage: multer.diskStorage({
         destination(req, file, done) {
@@ -67,6 +68,8 @@ const imgUpload = multer({
         filename(req, file, done) {
             const ext = path.extname(file.originalname);
             const baseName = path.basename(file.originalname, ext);
+            const fullName = baseName + '_' + Date.now() + ext;
+
             done(null, baseName + '_' + Date.now() + ext);
         },
     }),
@@ -79,13 +82,24 @@ const resizeImg = async function (req, res, next) {
         // 이미지의 width와 height 사이즈
         const rectSize = imageSize(req.file.path);
 
-        // width가 1024를 초과한다면 크기를 조정해서 저장한다.
+        // width가 1024 또는 height가 768을 초과한다면 크기를 조정해서 저장한다.
+        let resizingSet = null;
         if (rectSize.width > 1024) {
+            resizingSet.width = 1024;    
+        }
+        if(rectSize.height > 768){
+        }   resizingSet.height = 768;
+
+        // 리사이징 설정 값이 있다면 리사이징 한다.
+        if(resizingSet) {
+            
             // 새로 저장할 경로 및 이름 지정
             const newPath = req.file.destination + '/_' + req.file.filename;
+
             // 리사이징
             await sharp(req.file.path)
-                .resize({ width: 1024 })
+                // .resize({ width: 1024 })
+                .resize(resizingSet)
                 .toFile(newPath, function (err, info) {
                     if (err) throw err;
 
@@ -100,6 +114,7 @@ const resizeImg = async function (req, res, next) {
                     });
                 });
         }
+
     } catch (error) {
         next(error);
     }
@@ -120,6 +135,7 @@ router.post('/file/image', imgUpload.single('img'), resizeImg, function (req, re
     try {
         console.log(req.file);
         res.status(200).send(req.file);
+        
     } catch (error) {
         next(error);
     }

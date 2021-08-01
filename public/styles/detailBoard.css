@@ -17,7 +17,7 @@ section {
     width: 60%;
 }
 .section-content table {
-    margin: auto;
+    margin: 0.3em auto auto auto;
     width: 100%;
     border-collapse: separate;
     border-spacing: 0.2vw;
@@ -42,7 +42,7 @@ section {
 }
 
 .section-content > a {
-    color: cadetblue;
+    color: black;
     font-size: calc(0.1em + 1vw);
     font-weight: 700;
 }

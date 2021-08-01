@@ -3,7 +3,8 @@
 	"version": "0.0.1",
 	"private": false,
 	"scripts": {
-		"start": "nodemon web.js"
+		"start": "nodemon web.js",
+		"service": "node web.js"
 	},
 	"repository": {
 		"type": "git",
