@@ -12,9 +12,7 @@ window.addEventListener('load', function (e) {
 });
 
 function writePage_initEvent() {
-	document
-		.getElementById('submit')
-		.addEventListener('click', writePage_onClickSubmitBtn);
+	document.getElementById('submit').addEventListener('click', writePage_onClickSubmitBtn);
 }
 
 function writePage_initSummerNote() {
@@ -77,16 +75,9 @@ function writePage_initSummerNote() {
 			},
 			onPaste: function (e) {
 				var clipboardData = e.originalEvent.clipboardData;
-				if (
-					clipboardData &&
-					clipboardData.items &&
-					clipboardData.items.length
-				) {
+				if (clipboardData && clipboardData.items && clipboardData.items.length) {
 					var item = clipboardData.items[0];
-					if (
-						item.kind === 'file' &&
-						item.type.includes('image') == true
-					) {
+					if (item.kind === 'file' && item.type.includes('image') == true) {
 						e.preventDefault();
 					}
 				}
@@ -95,9 +86,7 @@ function writePage_initSummerNote() {
 			onMediaDelete: function (target) {
 				// 배열에 저장해둔 이미지들의 엘리먼트와 동일한 타겟이 있으면 배열에서 제거해준다.
 				for (let i = 0; i < writePageObj.image.elements.length; i++) {
-					const findIdx = writePageObj.image.elements.indexOf(
-						target[0]
-					);
+					const findIdx = writePageObj.image.elements.indexOf(target[0]);
 					if (findIdx != -1) {
 						writePageObj.image.elements.splice(findIdx, 1);
 						writePageObj.image.files.splice(findIdx, 1);
@@ -136,44 +125,40 @@ async function writePage_onClickSubmitBtn(e) {
 	for (let i = 0; i < imageSelectors.length; i++) {
 		const findIdx = writePageObj.image.elements.indexOf(imageSelectors[i]);
 		if (findIdx != -1) {
-			// 서버에 이미지파일 업로드 요청을 한다. response로 ImagePath를 받아온다.
-			write_sendImageFile(writePageObj.image.files[findIdx], imageSelectors[i]); 
+			// 동기적으로 서버에 이미지파일 업로드 요청을 한다. response로 ImagePath를 받아온다.
+			await write_sendImageFile(writePageObj.image.files[findIdx], imageSelectors[i]);
 		}
 	}
 
-	setTimeout(() => {
-		// 사진 데이터 업로드 후 바뀐 태그가 발생하므로 다시 받아준다.
-		const finalText = writePageObj.summerNoteElem.summernote('code');
+	// 사진 데이터 업로드 후 바뀐 태그가 발생하므로 다시 받아준다.
+	const finalText = writePageObj.summerNoteElem.summernote('code');
 
-		console.log(finalText);
+	console.log(finalText);
 
-		// 서버에 게시 글 post 요청
-		const postData = {
-			title: title,
-			text: finalText,
-			author: document.getElementById('author').textContent,
-		};
+	// 서버에 게시 글 post 요청
+	const postData = {
+		title: title,
+		text: finalText,
+		author: document.getElementById('author').textContent,
+	};
 
-		fetch('/board', {
-			method: 'post',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(postData),
-		}).then(function (res) {
-			console.log(res);
-			if (res.status == 200) {
-				Swal.fire({
-					icon: 'success',
-					text: '글쓰기 성공!',
-				}).then(function () {
-					window.location.href = '/community';
-				});
-			}
-		});
-	}, 2000);
-
-	
+	fetch('/board', {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(postData),
+	}).then(function (res) {
+		console.log(res);
+		if (res.status == 200) {
+			Swal.fire({
+				icon: 'success',
+				text: '글쓰기 성공!',
+			}).then(function () {
+				window.location.href = '/community';
+			});
+		}
+	});
 }
 // 썸머노트 사진추가시 에디터에 보여줄 이미지 파일을 가공한다.
 function write_thumbnailImageFile(file, editor) {
@@ -184,18 +169,14 @@ function write_thumbnailImageFile(file, editor) {
 	// 파일 로드가 끝나면 호출될 이벤트 함수
 	reader.onload = function (e) {
 		// base64를 Blob 포맷으로 변경
-		const src = window.URL.createObjectURL(
-			base64StringToBlob(e.target.result)
-		);
+		const src = window.URL.createObjectURL(base64StringToBlob(e.target.result));
 
 		$(editor)
 			.summernote('insertImage', src, file.name)
 			.then(function () {
 				// 썸머노트에 이미지 삽입이 끝난 후 해당 이미지 선택자를 찾아서
 				// 고유 데이터를 추가해준다.
-				const currentImgArray = document.querySelectorAll(
-					'div.note-editable img'
-				);
+				const currentImgArray = document.querySelectorAll('div.note-editable img');
 				const currentIdx = currentImgArray.length - 1;
 				writePageObj.image.elements.push(currentImgArray[currentIdx]);
 				writePageObj.image.files.push(file);
@@ -227,7 +208,7 @@ function binaryStringToArrayBuffer(binary) {
 	return buf;
 }
 
-function write_sendImageFile(file, selector) {
+async function write_sendImageFile(file, selector) {
 	// 이미지 형식 확인
 	if (!file.type.includes('image')) {
 		Swal.fire({
@@ -259,6 +240,7 @@ function write_sendImageFile(file, selector) {
 		enctype: 'multipart/form-data',
 		processData: false,
 		data: formData,
+		async: false, // 비동기 옵션 OFF (동기적 처리)
 		success: function (res) {
 			// public폴더가 static으로 설정되어 있으니까
 			// 경로에서 public을 제외한 나머지 경로를 받아온다.
