@@ -81,18 +81,17 @@ const resizeImg = async function (req, res, next) {
     // 이미지의 width와 height 사이즈
     const rectSize = imageSize(req.file.path);
 
-    // width가 1024 또는 height가 768을 초과한다면 크기를 조정해서 저장한다.
     let resizingOptions = {
       width: rectSize.width,
-      height: rectSize.height,
       useResizing: false,
     };
+
+    /* 가로 또는 세로 중 하나를 기준으로 크기를 줄여야 큰 사이즈의 
+      이미지가 축소하여 찌그러지거나, 잘리는 부분 없이 표현이 가능하므로
+      게시판의 화면 구성을 고려하여 세로의 크기는 길어도 리사이징 하지 않는다.
+    */
     if (rectSize.width > 1024) {
       resizingOptions.width = 1024;
-      resizingOptions.useResizing = true;
-    }
-    if (rectSize.height > 768) {
-      resizingOptions.height = 768;
       resizingOptions.useResizing = true;
     }
 
@@ -103,7 +102,9 @@ const resizeImg = async function (req, res, next) {
 
       // 리사이징
       await sharp(req.file.path)
-        .resize({ width: resizingOptions.width, height: resizingOptions.height })
+        .resize({
+          width: resizingOptions.width,
+        })
         .toFile(newPath, function (err, info) {
           if (err) throw err;
 
@@ -123,6 +124,7 @@ const resizeImg = async function (req, res, next) {
   }
   next();
 };
+
 router.post('/file/image', function (req, res, next) {
   try {
     if (req.session.user_id != null) {
@@ -134,14 +136,19 @@ router.post('/file/image', function (req, res, next) {
     next(error);
   }
 });
-router.post('/file/image', imgUpload.single('img'), resizeImg, function (req, res, next) {
-  try {
-    console.log(req.file);
-    res.status(200).send(req.file);
-  } catch (error) {
-    next(error);
-  }
-});
+router.post(
+  '/file/image',
+  imgUpload.single('img'),
+  resizeImg,
+  function (req, res, next) {
+    try {
+      console.log(req.file);
+      res.status(200).send(req.file);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 // 클라이언트에서 웹 스크래핑 요청이 있을 때 호출
 router.get('/scraping', function (req, res, next) {
@@ -158,7 +165,8 @@ router.get('/scraping', function (req, res, next) {
         // 컨텐츠 타입 확인 : text/html;charset=EUC-KR
         const charset = charsetFinder(html.headers);
         let $ = '';
-        if (charset !== 'utf-8') $ = cheerio.load(iconv.decode(html.data, charset));
+        if (charset !== 'utf-8')
+          $ = cheerio.load(iconv.decode(html.data, charset));
         else $ = cheerio.load(html.data);
 
         let result = null;
@@ -185,7 +193,10 @@ function charsetFinder(header) {
   const findIndex = contentType.indexOf(findText);
   if (findIndex == -1) return null;
 
-  const result = contentType.substring(findIndex + findText.length, contentType.length);
+  const result = contentType.substring(
+    findIndex + findText.length,
+    contentType.length,
+  );
   return result;
 }
 
