@@ -2,26 +2,30 @@ const Sequelize = require('sequelize');
 const User = require('./user');
 const Board = require('./board');
 const Comment = require('./comment');
-
-require('dotenv').config();
+const envConfigs = require('../envConfigs');
 
 // 연결할 데이터베이스 정보
-const config = process.env.NODE_ENV || {
-    username: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASS,
-    database: process.env.DATABASE_NAME,
-    host: process.env.DATABASE_HOST,
-    port: process.env.DATABASE_PORT,
-    dialect: 'mysql',
-    dialectOptions: {
-        useUTC: true, // UTC시간 기준으로 설정한다.
-        dateStrings: true, // ! 데이터 로드시 문자열로 가저옴
-        typeCast: true, // ! 타임존을 역으로 계산하지 않음
-    },
-    timezone: '+09:00', // KST시간으로 설정
+const config = {
+  username: envConfigs.database_username,
+  password: envConfigs.database_password,
+  database: envConfigs.database_name,
+  host: envConfigs.database_host,
+  port: envConfigs.database_port,
+  dialect: 'mysql',
+  dialectOptions: {
+    useUTC: true, // UTC시간 기준으로 설정한다.
+    dateStrings: true, // ! 데이터 로드시 문자열로 가저옴
+    typeCast: true, // ! 타임존을 역으로 계산하지 않음
+  },
+  timezone: '+09:00', // KST시간으로 설정
 };
 const db = {};
-let sequelize = new Sequelize(config.database, config.username, config.password, config);
+let sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config,
+);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
@@ -36,11 +40,23 @@ Board.init(sequelize);
 Comment.init(sequelize);
 
 // 테이블 관계 설정
-db.User.hasMany(db.Board, { foreignKey: 'author', sourceKey: 'user_uniqueName' });
-db.Board.belongsTo(db.User, { foreignKey: 'author', targetKey: 'user_uniqueName' });
+db.User.hasMany(db.Board, {
+  foreignKey: 'author',
+  sourceKey: 'user_uniqueName',
+});
+db.Board.belongsTo(db.User, {
+  foreignKey: 'author',
+  targetKey: 'user_uniqueName',
+});
 
-db.User.hasMany(db.Comment, { foreignKey: 'commenter', sourceKey: 'user_uniqueName' });
-db.Comment.belongsTo(db.User, { foreignKey: 'commenter', targetKey: 'user_uniqueName' });
+db.User.hasMany(db.Comment, {
+  foreignKey: 'commenter',
+  sourceKey: 'user_uniqueName',
+});
+db.Comment.belongsTo(db.User, {
+  foreignKey: 'commenter',
+  targetKey: 'user_uniqueName',
+});
 db.Board.hasMany(db.Comment, { foreignKey: 'boardId', sourceKey: 'id' });
 db.Comment.belongsTo(db.User, { foreignKey: 'boardId', targetKey: 'id' });
 
