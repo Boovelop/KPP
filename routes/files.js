@@ -74,12 +74,12 @@ const imgUpload = multer({
   }),
   limits: { fileSize: 5 * 1024 * 1024 },
 });
-const resizeImg = async function (req, res, next) {
+const resizeImg = async function (file) {
   try {
-    if (!req.file || req.session.user_id == null) return next();
+    if (!file) return null;
 
     // 이미지의 width와 height 사이즈
-    const rectSize = imageSize(req.file.path);
+    const rectSize = imageSize(file.path);
 
     let resizingOptions = {
       width: rectSize.width,
@@ -98,10 +98,10 @@ const resizeImg = async function (req, res, next) {
     // 리사이징 설정 값이 있다면 리사이징 한다.
     if (resizingOptions.useResizing) {
       // 새로 저장할 경로 및 이름 지정
-      const newPath = req.file.destination + '/_' + req.file.filename;
+      const newPath = file.destination + '/_' + file.filename;
 
       // 리사이징
-      await sharp(req.file.path)
+      await sharp(file.path)
         .resize({
           width: resizingOptions.width,
         })
@@ -109,20 +109,20 @@ const resizeImg = async function (req, res, next) {
           if (err) throw err;
 
           // 기존 파일 삭제
-          fs.unlink(req.file.path, function (err) {
+          fs.unlink(file.path, function (err) {
             if (err) throw err;
 
             // 리사이징된 파일 이름 기존이름으로 변경
-            fs.rename(newPath, req.file.path, function (err) {
+            fs.rename(newPath, file.path, function (err) {
               if (err) throw err;
             });
           });
         });
     }
   } catch (error) {
-    next(error);
+    console.error('image resizing failed', error);
+    return null;
   }
-  next();
 };
 
 router.post('/file/image', function (req, res, next) {
@@ -136,19 +136,23 @@ router.post('/file/image', function (req, res, next) {
     next(error);
   }
 });
-router.post(
-  '/file/image',
-  imgUpload.single('img'),
-  resizeImg,
-  function (req, res, next) {
-    try {
-      console.log(req.file);
-      res.status(200).send(req.file);
-    } catch (error) {
-      next(error);
+router.post('/file/image', imgUpload.single('img'), function (req, res, next) {
+  try {
+    if (!resizeImg(req)) return;
+    res.status(200).send(req.file);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('images', imgUpload.array('img'), function (req, res, next) {
+  try {
+    if (!req.session.user_id) {
+      console.log('로그인 상태가 아니므로 이미지 업데이트를 할 수 없음');
+    } else {
     }
-  },
-);
+  } catch (error) {}
+});
 
 // 클라이언트에서 웹 스크래핑 요청이 있을 때 호출
 router.get('/scraping', function (req, res, next) {

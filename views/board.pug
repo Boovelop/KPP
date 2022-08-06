@@ -1,0 +1,50 @@
+extends ./common/index.pug
+include ./common/header.pug
+include ./common/sideMenu.pug
+include ./common/footer.pug
+
+block append libs
+    script(src="./libs/summernote-0.8.18-dist/summernote.min.js") 
+    script(src="./libs/summernote-0.8.18-dist/summernote-lite.min.js") 
+    link(rel="stylesheet", href="./libs/summernote-0.8.18-dist/summernote.min.css")
+    link(rel="stylesheet", href="./libs/summernote-0.8.18-dist/summernote-lite.min.css")
+
+block append styles 
+    link(rel="stylesheet", href="./styles/board.css?after")
+    
+block append scripts
+    script(src="./scripts/board.js?after")
+
+block section 
+    section
+      #boardState=boardState
+      .section-content
+        a(href='/community') ← 뒤로가기
+        table
+            if (boardState !== 'write')
+              tr 
+                td.write-title 작성일
+                td 
+                  span#create_at
+            tr  
+              td.write-title 작성자
+              td
+                span#author=author
+            tr
+              td.write-title 제목
+              td
+                span.title-text
+                input.title-text(type="text")
+            tr
+              td.write-title 내용
+              td
+                #text
+                #summer-note
+                  
+        button#write 글 게시
+        button#cancel 취소
+        button#modify 수정 완료
+        button#delete 삭제
+        button#edit 수정
+        .clear
+
