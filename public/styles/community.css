@@ -174,8 +174,9 @@ button:hover {
     text-align: right;
 }
 
+/* 채팅 닉네임 */
 .chat-message-name {
-    /* 채팅 닉네임 */
-    font-size: calc(0.1em + 0.6vw);
+    font-weight: bold;
+    font-size: calc(0.2em + 0.6vw);
     margin-bottom: 0.2vw;
 }

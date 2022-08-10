@@ -21,7 +21,7 @@
     filter: blur(0.3vw);
 }
 
-#side-content {
+#side-contents {
     width: 0px;
     max-width: 400px;
     transition: width 0.5s ease-in-out;
@@ -30,14 +30,14 @@
     width: calc(50px + 20vw) !important;
 }
 
-#side-content > div,
-#side-content > nav {
+#side-contents > div,
+#side-contents > nav {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
 }
 
 /* 사이드 바 ON-OFF 버튼 */
-#btn-sideOnOff {
+#btn-sideMenuOpen, #btn-sideMenuClose{
     position: absolute;
     top: 50%;
     width: 50px;
@@ -50,7 +50,7 @@
     cursor: pointer;
     transform: translate(-50px, -25px);
 }
-#btn-sideOnOff:hover {
+#btn-sideMenuOpen:hover, #btn-sideMenuClose:hover {
     color: #0066ff;
 }
 

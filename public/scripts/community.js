@@ -1,282 +1,272 @@
-const communityObj = {
+const community = {
+  socket: io('/chat'),
   table: null,
   tablesData: null,
   viewSections: {
     board: null, // 게시판 view
     chat: null, // 실시간 채팅 view
   },
-  warpElements: {
-    board: null, // 게시판 a tag 버튼
-    chat: null, // 실시간 채팅 a tag 버튼
+
+  btnElements: {
+    warpBoard: null, // 게시판 메뉴 버튼
+    warpChat: null, // 실시간 채팅 메뉴 버튼
   },
   chat: {
     elements: {
-      list: null, // 실시간 채팅 글 목록
+      MessageList: null, // 실시간 채팅 글 목록
       inputNickName: null, // 채팅 닉네임
       inputMessage: null, // 채팅 내용
-    },
-    styles: {
+      inputNickNameBorderStyle: null,
+      inputMessageBorderStyle: null,
       inputBorder: [],
     },
+    userColor: userColor,
   },
-};
 
-const socket = io('/chat');
+  initBindElements() {
+    this.viewSections.board =
+      document.getElementsByClassName('section-board')[0];
+    this.viewSections.chat = document.getElementsByClassName('section-chat')[0];
+    this.btnElements.warpBoard = document.getElementById('warp-board');
+    this.btnElements.warpChat = document.getElementById('warp-chat');
+    this.chat.elements.MessageList = document.getElementById('chat-list');
+    this.chat.elements.inputNickName =
+      document.getElementById('chat-user-name');
+    this.chat.elements.inputMessage = document.getElementById('chat-input');
 
-window.addEventListener('load', function (e) {
-  community_initObj();
-  community_initEventListener();
-  community_initTables();
-  community_initChat();
-});
+    this.chat.elements.inputNickNameBorderStyle =
+      this.chat.elements.inputNickName.style.border;
+    this.chat.elements.inputMessageBorderStyle =
+      this.chat.elements.inputMessage.style.border;
+  },
 
-function community_initObj() {
-  communityObj.viewSections.board =
-    document.getElementsByClassName('section-board')[0];
-  communityObj.viewSections.chat =
-    document.getElementsByClassName('section-chat')[0];
-  communityObj.warpElements.board = document.getElementById('warp-board');
-  communityObj.warpElements.chat = document.getElementById('warp-chat');
-  communityObj.chat.elements.list = document.getElementById('chat-list');
-  communityObj.chat.elements.inputNickName =
-    document.getElementById('chat-user-name');
-  communityObj.chat.elements.inputMessage =
-    document.getElementById('chat-input');
-}
+  initState() {
+    this.onClickWarpBoard();
+  },
 
-function community_initEventListener() {
-  document
-    .getElementById('write')
-    .addEventListener('click', community_onClickWriteBtn);
-  communityObj.warpElements.board.addEventListener(
-    'click',
-    community_onClickWarpBoard,
-  );
-  communityObj.warpElements.chat.addEventListener(
-    'click',
-    community_onClickWarpChat,
-  );
-  communityObj.chat.elements.inputMessage.addEventListener(
-    'keydown',
-    community_keyDownSendChatMessageEvent,
-  );
-  document
-    .getElementById('chat-send')
-    .addEventListener('click', community_sendChatMessage);
+  initEventListener() {
+    document
+      .getElementById('write')
+      .addEventListener('click', this.onClickWriteBtn);
+    document
+      .getElementById('chat-send')
+      .addEventListener('click', this.onSendMessage);
 
-  community_onClickWarpBoard();
-}
+    this.btnElements.warpBoard.addEventListener('click', this.onClickWarpBoard);
+    this.btnElements.warpChat.addEventListener('click', this.onClickWarpChat);
+    this.chat.elements.inputMessage.addEventListener(
+      'keydown',
+      this.onKeyDownChatMessage,
+    );
+  },
 
-async function community_initTables() {
-  const datas = await community_getTablesData();
+  async initTables() {
+    const dataArray = await this.getTablesData();
 
-  communityObj.table = $('#board-table').DataTable({
-    data: datas,
-    columns: [
-      {
-        title: '제목',
-        data: 'title',
-        className: 'column-title',
-        render: function (data, type, row, meta) {
-          return `<a href="#">${data}</a>`;
+    this.table = $('#board-table').DataTable({
+      data: dataArray,
+      columns: [
+        {
+          title: '제목',
+          data: 'title',
+          className: 'column-title',
+          render: function (data, type, row, meta) {
+            return `<a href="#">${data}</a>`;
+          },
+        },
+        { title: '작성자', data: 'author', className: 'column-author' },
+        {
+          title: '작성일',
+          data: 'created_at',
+          className: 'column-dateCreated',
+          searchable: false,
+        },
+        {
+          title: '조회수',
+          data: 'views',
+          className: 'column-views',
+          searchable: false,
+        },
+      ],
+
+      order: [[2, 'desc']], // 작성일을 기준으로 내림차순 정렬을 기본으로 설정
+
+      language: {
+        emptyTable: '작성된 글이 없습니다.',
+        lengthMenu: '페이지당 _MENU_ 개씩 보기',
+        info: '현재 _START_ - _END_ / _TOTAL_건',
+        infoEmpty: '데이터 없음',
+        infoFiltered: '( _MAX_건의 데이터에서 필터링 됨 )',
+        search: '<i class="fas fa-search"></i>',
+        zeroRecords: '검색과 일치하는 데이터가 없습니다.',
+        loadingRecords: '로딩중...',
+        processing: '잠시만 기다려 주세요~',
+        paginate: {
+          first: '처음',
+          next: '다음',
+          previous: '이전',
+          last: '끝',
         },
       },
-      { title: '작성자', data: 'author', className: 'column-author' },
-      {
-        title: '작성일',
-        data: 'created_at',
-        className: 'column-dateCreated',
-        searchable: false,
-      },
-      {
-        title: '조회수',
-        data: 'views',
-        className: 'column-views',
-        searchable: false,
-      },
-    ],
 
-    order: [[2, 'desc']], // 작성일을 기준으로 내림차순 정렬을 기본으로 설정
+      pagingType: 'full_numbers',
 
-    language: {
-      emptyTable: '작성된 글이 없습니다.',
-      lengthMenu: '페이지당 _MENU_ 개씩 보기',
-      info: '현재 _START_ - _END_ / _TOTAL_건',
-      infoEmpty: '데이터 없음',
-      infoFiltered: '( _MAX_건의 데이터에서 필터링 됨 )',
-      search: '<i class="fas fa-search"></i>',
-      zeroRecords: '검색과 일치하는 데이터가 없습니다.',
-      loadingRecords: '로딩중...',
-      processing: '잠시만 기다려 주세요~',
-      paginate: {
-        first: '처음',
-        next: '다음',
-        previous: '이전',
-        last: '끝',
-      },
-    },
+      responsive: true, // 반응형, 폭이 좁아지면 + 기호가 표시되고, 클릭하면 하단에 나머지 컬럼이 보인다.
+      autoWidth: true, // 컬럼 자동 폭 조정
+    });
 
-    pagingType: 'full_numbers',
+    // 제목 클릭 처리
+    $('#board-table tbody').on(
+      'click',
+      '.column-title',
+      this.onClickBoardTitle,
+    );
+  },
 
-    responsive: true, // 반응형, 폭이 좁아지면 + 기호가 표시되고, 클릭하면 하단에 나머지 컬럼이 보인다.
-    autoWidth: true, // 컬럼 자동 폭 조정
-  });
+  initChat() {
+    // 채팅 스크롤 최하단으로 이동
+    this.chat.elements.MessageList.scrollTop =
+      this.chat.elements.MessageList.scrollHeight;
 
-  // 제목 클릭 처리
-  $('#board-table tbody').on(
-    'click',
-    '.column-title',
-    community_onClickBoardTitle,
-  );
-}
+    const userName = this.chat.elements.inputNickName.value;
+    if (userName) this.chat.elements.inputNickName.disabled = true;
+    utils.setElementStyle(
+      this.chat.elements.inputNickName,
+      'color',
+      this.chat.userColor,
+    );
 
-function community_initChat() {
-  // 채팅 스크롤 최하단으로 이동
-  communityObj.chat.elements.list.scrollTop =
-    communityObj.chat.elements.list.scrollHeight;
+    // 메세지 받는 소켓
+    this.socket.on('receive_message', function (data) {
+      const messageContainer = document.createElement('li');
+      messageContainer.classList.add('chat-message-container');
 
-  const userName = communityObj.chat.elements.inputNickName.value;
-  if (userName) {
-    communityObj.chat.elements.inputNickName.disabled = true;
-  }
-  setElementStyle(communityObj.chat.elements.inputNickName, 'color', userColor);
+      // 내가 보낸 메세지인지 아닌지 확인 및 class 선택자 추가
+      if (data.userColor == community.chat.userColor)
+        messageContainer.classList.add('mine');
+      else messageContainer.classList.add('other');
 
-  // 메세지 받는 소켓
-  socket.on('receive_message', function (data) {
-    const messsageContainer = document.createElement('li');
-    messsageContainer.classList.add('chat-message-container');
+      const nameTag = document.createElement('p');
+      nameTag.classList.add('chat-message-name');
+      nameTag.style.color = data.userColor;
+      nameTag.textContent = data.name;
 
-    // 내가 보낸 메세지인지 아닌지 확인 및 class 선택자 추가
-    if (data.userColor == userColor) messsageContainer.classList.add('mine');
-    else messsageContainer.classList.add('other');
+      const messageTag = document.createElement('p');
+      messageTag.classList.add('chat-message-text');
+      messageTag.textContent = data.message;
 
-    const nameTag = document.createElement('p');
-    nameTag.classList.add('chat-message-name');
-    nameTag.style.color = data.userColor;
-    nameTag.textContent = data.name;
+      const clearBothTag = document.createElement('div');
+      clearBothTag.classList.add('clear');
 
-    const messageTag = document.createElement('p');
-    messageTag.classList.add('chat-message-text');
-    messageTag.textContent = data.message;
+      messageContainer.appendChild(nameTag);
+      messageContainer.appendChild(messageTag);
 
-    const clearBothTag = document.createElement('div');
-    clearBothTag.classList.add('clear');
+      community.chat.elements.MessageList.appendChild(messageContainer);
+      community.chat.elements.MessageList.appendChild(clearBothTag);
 
-    messsageContainer.appendChild(nameTag);
-    messsageContainer.appendChild(messageTag);
+      // 채팅 스크롤 최 하단으로 이동
+      community.chat.elements.MessageList.scrollTop =
+        community.chat.elements.MessageList.scrollHeight;
+    });
+  },
 
-    communityObj.chat.elements.list.appendChild(messsageContainer);
-    communityObj.chat.elements.list.appendChild(clearBothTag);
+  async getTablesData() {
+    const response = await serverUtils.getFetching('/board', {
+      'Content-Type': 'application/json',
+    });
+    this.tablesData = response;
+    return response;
+  },
+  changeView(view) {
+    const isBoard = view == 'board';
+    this.viewSections.chat.hidden = isBoard;
+    this.viewSections.board.hidden = !isBoard;
 
-    // 채팅 스크롤 최 하단으로 이동
-    communityObj.chat.elements.list.scrollTop =
-      communityObj.chat.elements.list.scrollHeight;
-  });
-}
+    const activeColor = '#0066ff';
+    const inActiveColor = 'black';
 
-async function community_getTablesData() {
-  const response = await getBoards();
-  communityObj.tablesData = response;
-  return response;
-}
-
-// 게시판 글 클릭시 호출되는 콜백 함수
-function community_onClickBoardTitle(e) {
-  const index = communityObj.table.row(this)[0];
-  const data = communityObj.tablesData[index];
-  window.location.replace(`/read?id=${data.id}&title=${data.title}`);
-}
-
-function community_onClickWriteBtn(e) {
-  e.preventDefault();
-
-  loginCheck().then(function (response) {
-    if (!response.isLogin) {
+    utils.setElementStyle(
+      this.btnElements.warpBoard,
+      'color',
+      isBoard == true ? activeColor : inActiveColor,
+    );
+    utils.setElementStyle(
+      this.btnElements.warpChat,
+      'color',
+      isBoard == true ? inActiveColor : activeColor,
+    );
+  },
+  // ------------------- EventListener -------------------
+  onClickBoardTitle(e) {
+    const index = community.table.row(this)[0];
+    const data = community.tablesData[index];
+    window.location.replace(`/read?id=${data.id}&title=${data.title}`);
+  },
+  async onClickWriteBtn(e) {
+    if (await auth.isLogin()) {
+      window.location.replace('/write');
+    } else {
       Swal.fire({
         icon: 'error',
         text: '글쓰기에 로그인이 필요합니다!',
       });
       return;
     }
-    window.location.replace('/write');
-  });
-}
-// 게시판 클릭시 호출되는 함수
-function community_onClickWarpBoard(e) {
-  community_setWarpState(true);
-}
+  },
+  onClickWarpBoard(e) {
+    community.changeView('board');
+  },
+  onClickWarpChat(e) {
+    community.changeView('chat');
+  },
+  onKeyDownChatMessage(e) {
+    // 엔터키 입력시 메시지 보내기ㅣ
+    if (e.keyCode == 13) community.onSendMessage(e);
+  },
+  onSendMessage(e) {
+    e.preventDefault();
+    if (!community.chat.elements.inputNickName.value) {
+      community.onSendChatErrorAnimation(
+        community.chat.elements.inputNickName,
+        community.chat.elements.inputNickNameBorderStyle,
+      );
+      return;
+    }
+    if (!community.chat.elements.inputMessage.value) {
+      community.onSendChatErrorAnimation(
+        community.chat.elements.inputMessage,
+        community.chat.elements.inputMessageBorderStyle,
+      );
+      return;
+    }
 
-// 실시간 채팅 클릭시 호출되는 함수
-function community_onClickWarpChat(e) {
-  community_setWarpState(false);
-}
+    community.socket.emit('send_message', {
+      name: community.chat.elements.inputNickName.value,
+      message: community.chat.elements.inputMessage.value,
+    });
 
-function community_setWarpState(isBoard) {
-  communityObj.viewSections.chat.hidden = isBoard;
-  communityObj.viewSections.board.hidden = !isBoard;
+    community.chat.elements.inputMessage.value = '';
+    community.chat.elements.inputMessage.focus();
+  },
+  onSendChatErrorAnimation(element, border) {
+    const animateOptions = ['animate__animated', 'animate__headShake'];
+    // 애니메이션 추가
+    element.classList.add(animateOptions[0], animateOptions[1]);
+    element.style.setProperty('--animate-duration', '0.5s');
+    utils.setElementStyle(element, 'border', '1px solid red');
 
-  const activeColor = '#0066ff';
-  const inActiveColor = 'black';
+    // 애니메이션 끝나는 이벤트 처리
+    element.addEventListener('animationend', function (e) {
+      e.target.classList.remove(animateOptions[0], animateOptions[1]);
+      e.target.style.border = border;
+    });
+  },
+};
 
-  setElementStyle(
-    communityObj.warpElements.board,
-    'color',
-    isBoard == true ? activeColor : inActiveColor,
-  );
-  setElementStyle(
-    communityObj.warpElements.chat,
-    'color',
-    isBoard == true ? inActiveColor : activeColor,
-  );
-}
-
-function community_keyDownSendChatMessageEvent(e) {
-  // 엔터키 확인 후 보내기 기능 호출
-  if (e.keyCode == 13) community_sendChatMessage(e);
-}
-
-// 채팅에서 보내기 버튼 클릭시 호출되는 함수
-function community_sendChatMessage(e) {
-  e.preventDefault();
-
-  if (!communityObj.chat.elements.inputNickName.value) {
-    community_sendChatErrorAnimation(
-      communityObj.chat.elements.inputNickName,
-      communityObj.chat.styles.inputBorder[0],
-    );
-    return;
-  }
-  if (!communityObj.chat.elements.inputMessage.value) {
-    community_sendChatErrorAnimation(
-      communityObj.chat.elements.inputMessage,
-      communityObj.chat.styles.inputBorder[1],
-    );
-    return;
-  }
-
-  socket.emit('send_message', {
-    name: communityObj.chat.elements.inputNickName.value,
-    message: communityObj.chat.elements.inputMessage.value,
-  });
-
-  communityObj.chat.elements.inputMessage.value = '';
-  communityObj.chat.elements.inputMessage.focus();
-}
-
-const animateOptions = ['animate__animated', 'animate__headShake'];
-function community_sendChatErrorAnimation(element, saveStyle) {
-  // 애니메이션 추가
-  element.classList.add(animateOptions[0], animateOptions[1]);
-  element.style.setProperty('--animate-duration', '0.5s');
-
-  saveStyle = element.style.border;
-  setElementStyle(element, 'border', '1px solid red');
-
-  // 애니메이션 끝나는 이벤트 처리
-  element.addEventListener('animationend', function (e) {
-    e.target.classList.remove(animateOptions[0], animateOptions[1]);
-
-    e.target.style.border = saveStyle;
-    // common_setElementStyle(e.target, 'border', '1px solid black');
-  });
-}
+window.addEventListener('load', function (e) {
+  community.initBindElements();
+  community.initEventListener();
+  community.initState();
+  community.initTables();
+  community.initChat();
+});

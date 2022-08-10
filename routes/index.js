@@ -42,7 +42,7 @@ router.get('/read', async function (req, res, next) {
   const board = await Board.findOne({
     where: { id: req.query.id },
   });
-  board.increment('views', { by: 1 });
+  board?.increment('views', { by: 1 });
   res.render('./board.pug', {
     title: 'KPP - ' + req.query.title,
     boardState: 'read',

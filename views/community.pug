@@ -16,8 +16,6 @@ block append styles
 block append scripts
     script(src="./scripts/community.js?after")
     
-
-
 block section
     section 
         .section-title
@@ -42,7 +40,6 @@ block section
                 input#chat-input(type="text")
                 button#chat-send 보내기
 
-    //- 스크립트에서 데이터 받는 방법
+    //- 스크립트에서 render property 받는 방법
     script.
-        const userColor= '#{userColor}';
-        console.log(userColor);
+        const userColor = '#{userColor}';
