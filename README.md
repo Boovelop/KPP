@@ -7,7 +7,7 @@ Korean Pop People의 줄임말로, 한국 대중가요에 대한 소개 및 커�
 - 진행 기간 : 2021-03-08 ~ 2021-03-24
 - 사이트 링크 : <http://boovelop.duckdns.org:3001/>
 - 블로그 기록 : <https://velog.io/@goblin820/%EA%B0%9C%EC%9D%B8-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-KPP-1>
-- 2022-08 리팩토링 및 버그 수정 진행중
+- 2022-08 리팩토링 및 버그 수정 진행중, [리팩토링 하면서 고민한 흔적](https://github.com/trevor1107/KPP/blob/main/think.md)
 
 ## 사용 기술 및 라이브러리
 
