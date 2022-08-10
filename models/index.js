@@ -13,9 +13,8 @@ const config = {
   port: envConfigs.database_port,
   dialect: 'mysql',
   dialectOptions: {
-    useUTC: true, // UTC시간 기준으로 설정한다.
-    dateStrings: true, // ! 데이터 로드시 문자열로 가저옴
-    typeCast: true, // ! 타임존을 역으로 계산하지 않음
+    dateStrings: true, // 데이터 로드시 문자열로 가져오는 옵션
+    typeCast: true, // 타임존을 역으로 계산하지 않는 옵션
   },
   timezone: '+09:00', // KST시간으로 설정
 };
