@@ -254,11 +254,11 @@ const board = {
     board.image.elements = [
       ...document.querySelectorAll('div.note-editable img'),
     ];
-    await utils.urlToFile(
-      board.image.elements[0],
-      board.image.elements[0].dataset.filename,
-      'image/*',
-    );
+    // await utils.urlToFile(
+    //   board.image.elements[0],
+    //   board.image.elements[0].dataset.filename,
+    //   'image/*',
+    // );
     // for (const imageElement of board.image.elements) {
     //   board.image.files.push(
     //     await utils.urlToFile(
@@ -357,7 +357,7 @@ const board = {
     board.textElements.$titleInput.val(board.textElements.$titleSpan.text());
     board.summerNoteElements.$text.html(board.boardResponseData.text);
     board.state = boardState.editable;
-    board_stateAction();
+    board.stateAction();
   },
   async onClickModifyBtn(e) {
     // todo: 게시글 수정시 이미지 파일 확인해서 필요없는 파일 삭제 기능 필요
@@ -443,7 +443,7 @@ const board = {
   onClickCancelBtn(e) {
     e.preventDefault();
     board.state = boardState.readAuthor;
-    board_stateAction();
+    board.stateAction();
   },
 };
 
