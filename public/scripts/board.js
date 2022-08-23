@@ -52,7 +52,7 @@ const board = {
   async initState() {
     const boardStateElement = $('#boardState');
     board.state = boardStateElement.text();
-  
+
     if (board.state === boardState.write) board.initSummerNote();
     else if (board.state === boardState.read) {
       // 글 읽기의 경우 기존 데이터를 서버에 요청한다.
@@ -62,20 +62,18 @@ const board = {
           method: 'search',
           dataType: 'json',
         });
-  
+
         board.textElements.$author.text(board.boardResponseData.author);
-        board.textElements.$create_at.text(
-          board.boardResponseData.created_at,
-        );
+        board.textElements.$create_at.text(board.boardResponseData.created_at);
         board.textElements.$titleInput.val(board.boardResponseData.title);
         board.textElements.$titleSpan.text(board.boardResponseData.title);
         board.textElements.$mainText.html(board.boardResponseData.text);
-  
+
         // 로그인 되어있는 유저와 현재 선택한 게시글이 같은 경우 상태 변경
         const userResponse = await fetch('/users/single', {
           method: 'get',
         });
-  
+
         if (userResponse.status === 200) {
           const user = await userResponse.json();
           if (user.user_uniqueName === board.boardResponseData.author) {
@@ -136,7 +134,7 @@ const board = {
         '72',
       ],
     });
-  
+
     this.summerNoteElements.$text = $('.note-editable');
     this.summerNoteElements.$editor = $('.note-editor');
   },
@@ -146,12 +144,12 @@ const board = {
     board.btnElements.delete.hidden = true;
     board.btnElements.modify.hidden = true;
     board.btnElements.cancel.hidden = true;
-  
+
     board.textElements.$titleInput.hide();
     board.textElements.$titleSpan.hide();
     board.textElements.$mainText.hide();
     board.summerNoteElements.$editor?.hide();
-  
+
     switch (board.state) {
       case boardState.write:
         board.btnElements.write.hidden = false;
@@ -175,9 +173,9 @@ const board = {
         board.summerNoteElements.$editor?.show();
         break;
     }
-  }, 
+  },
   submitChecker() {
-    if (isEmptyString(board.textElements.$titleInput.val())) {
+    if (utils.isEmptyString(board.textElements.$titleInput.val())) {
       Swal.fire({
         icon: 'error',
         text: '제목을 입력해주세요!',
@@ -253,29 +251,34 @@ const board = {
   async imageUpload() {
     // todo: 이미지 업로드시 파일이 여러개일 경우 한번에 요청 하는 기능
     // todo: 이미지 업로드 비동기 요청 처리
-    return new Promise((resolve) => {
-      board.image.elements = [
-        ...document.querySelectorAll('div.note-editable img'),
-      ];
-    
-      for (const imageElement of board.image.elements) {
-        board.image.files.push(
-          urlToFile(imageElement.src, imageElement.dataset.filename, 'image'),
-        );
-      }
-    
-      try {
-        console.log('샌드 이미지 파일스 시작');
-        await board.sendImageFiles(board.image.files, board.image.elements);
-        console.log('샌드 이미지 파일스 끝');
-        resolve(true);
-      } catch (error) {
-        console.error('SendImageFiles Fail');
-        resolve(false);
-      }
-    })
-    
-  
+    board.image.elements = [
+      ...document.querySelectorAll('div.note-editable img'),
+    ];
+    await utils.urlToFile(
+      board.image.elements[0],
+      board.image.elements[0].dataset.filename,
+      'image/*',
+    );
+    // for (const imageElement of board.image.elements) {
+    //   board.image.files.push(
+    //     await utils.urlToFile(
+    //       imageElement.src,
+    //       imageElement.dataset.filename,
+    //       'image/*',
+    //     ),
+    //   );
+    // }
+
+    try {
+      console.log('샌드 이미지 파일스 시작');
+      await board.sendImageFiles(board.image.files, board.image.elements);
+      console.log('샌드 이미지 파일스 끝');
+      return true;
+    } catch (error) {
+      console.error('SendImageFiles Fail');
+      return false;
+    }
+
     // // 서버에 이미지 업로드 요청
     // for (let i = 0; i < boardObj.image.elements.length; i++) {
     //   try {
@@ -290,12 +293,11 @@ const board = {
     //   }
     // }
     // console.log('board_imageUpload complete');
-    return true;
   },
   getImageFileNameList(imageElements) {
     const length = imageElements?.length;
     if (!length || !(imageElements[0] instanceof HTMLImageElement)) return '';
-  
+
     const imageFileNameList = [];
     let source = '';
     let fileName = '';
@@ -304,19 +306,19 @@ const board = {
       fileName = source.substring(source.lastIndexOf('/') + 1, source.length);
       imageFileNameList.push(fileName);
     }
-  
+
     return imageFileNameList;
   },
   // ------------------- Eventlistener -------------------
   async onClickWriteBtn(e) {
     e.preventDefault();
-  
+
     if (board.isHTTPRequesting) return;
     board.isHTTPRequesting = true;
-  
+
     if (!board.submitChecker()) return; // 제목, 본문 빈 문자열 체크
-    if (!(await imageUpload())) return;
-  
+    if (!(await board.imageUpload())) return;
+
     const reqBody = {
       author: board.textElements.$author.text(),
       title: board.textElements.$titleInput.val(),
@@ -324,7 +326,7 @@ const board = {
       imageFileNameList:
         board.getImageFileNameList(board.image.elements)?.toString() ?? '',
     };
-  
+
     setTimeout(() => {
       fetch('/board', {
         method: 'post',
@@ -349,11 +351,10 @@ const board = {
         });
     }, 500);
   },
-  onClickEditBtn() { // 편집 가능 상태로 전환
+  onClickEditBtn() {
+    // 편집 가능 상태로 전환
     board.initSummerNote();
-    board.textElements.$titleInput.val(
-      board.textElements.$titleSpan.text(),
-    );
+    board.textElements.$titleInput.val(board.textElements.$titleSpan.text());
     board.summerNoteElements.$text.html(board.boardResponseData.text);
     board.state = boardState.editable;
     board_stateAction();
@@ -363,10 +364,10 @@ const board = {
     e.preventDefault();
     if (board.isHTTPRequesting) return;
     board.isHTTPRequesting = true;
-  
+
     if (!board.submitChecker()) return;
     if (!(await imageUpload())) return;
-  
+
     const reqBody = {
       author: board.textElements.$author.text(),
       title: board.textElements.$titleInput.val(),
@@ -374,7 +375,7 @@ const board = {
       imageFileNameList:
         board.getImageFileNameList(board.image.elements)?.toString() ?? '',
     };
-  
+
     setTimeout(() => {
       $.ajax({
         url: '/board',
@@ -406,7 +407,7 @@ const board = {
     e.preventDefault();
     if (board.isHTTPRequesting) return;
     board.isHTTPRequesting = true;
-  
+
     // 삭제 전 확인 및 취소 선택 사항
     const result = await Swal.fire({
       icon: 'warning',
@@ -416,7 +417,7 @@ const board = {
       cancelButtonText: '취소',
       cancelButtonColor: '#d33',
     });
-  
+
     if (result.isConfirmed) {
       $.ajax({
         url: '/board',
@@ -443,7 +444,7 @@ const board = {
     e.preventDefault();
     board.state = boardState.readAuthor;
     board_stateAction();
-  }
+  },
 };
 
 const boardState = {
