@@ -2,7 +2,8 @@
 
 Korean Pop People의 줄임말로, 한국 대중가요에 대한 소개 및 커뮤니티 사이트입니다.
 
-한국 대중가요에 대한 뮤직비디오 소개 및 엔터테이먼트의 실시간 주가확인이 가능합니다. 한국 대중가요의 간단한 역사 소개, 게시판을 통한 커뮤니티 활성화, 실시간 채팅을 지원합니다.
+한국 대중가요 뮤직비디오 재생, 가요계 엔터테이먼트의 실시간 주가 확인 기능
+한국 대중가요의 간단한 역사 소개, 게시판, 실시간 채팅 서비스
 
 - 진행 기간 : 2021-03-08 ~ 2021-03-24
 - 사이트 링크 : <http://boovelop.duckdns.org:3001/>
@@ -11,42 +12,40 @@ Korean Pop People의 줄임말로, 한국 대중가요에 대한 소개 및 커�
 
 ## 사용 기술 및 라이브러리
 
-- HTML, CSS, JavaScript
-- Node.js, Express, MySQL, socket.io, Sequelize
-- jQuery, Pug, SlickSlider, SummerNote
-- 카카오 API 로그인, 로그아웃
-- 오라클 클라우드 플랫폼 가상서버 배포
+- JavaScript, Pug, CSS, jQuery
+- Node.js, Express, MySQL, Sequelize, socket.io
+- KaKao API, Oracle Cloud
 
 ## 구현 기술
 
 #### HTML
 
-- pug 템플릿으로 간결한 코드 작성
+- pug 템플릿으로 화면 구성
 
 #### Auth
 
-- 카카오 API 연동 로그인 및 로그아웃 기능 구현
+- 카카오 API 연동 로그인 및 로그아웃
 
 #### 메인 페이지
 
-- 로컬 비디오파일 랜덤 재생 및 플레이 리스트 자동 재생 구현
-- 크롤링 기술으로 주식 정보를 스크랩하고 주식 정보를 자동 스크롤 모션으로 표시
-- Slick Slider 라이브러리 활용, 특정 폴더의 이미지 파일들을 동적으로 추가하여 표시
-- 로컬 json파일 파싱하여 슬라이더 이미지 클릭시 유튜브 팝업 표시
+- 로컬 비디오 파일 랜덤 재생, 비디오 옵션 설정
+- 실시간 주식 정보 스크랩, 상하 자동 스크롤 모션으로 표시
+- 특정 폴더의 파일들을 동적으로 추가하여 슬라이드 이미지 표시(SlickSlider)
+- 로컬 json파일 파싱하여 슬라이더 이미지 클릭 시 해당 유튜브 영상 팝업 표시
 
 #### KPOP 페이지
 
-- 대중가요 역사를 소개하는 스크롤링 애니메이션 구현
+- 대중가요 역사를 소개하는 스크롤링 애니메이션
 
 #### Community 페이지
 
-- 게시판 CRUD, SummerNote 라이브러리 활용, 이미지 업로드 커스텀
-- Node.js socket.io 라이브러리 활용, 소켓 통신으로 실시간 전체 채팅 구현
+- 게시판 CRUD, SummerNote Editor 활용 및 이미지 업로드 커스터마이징
+- socket.io 실시간 1:n 채팅
 
 #### DB
 
-- Node.js Sequelize 라이브러리 활용, DB 모델링 설계 및 관리
+- Sequelize 활용 DB 관계형 모델링 설계 및 관리
 
 #### 배포
 
-- OracleCloud 인스턴싱 컴퓨팅 서버에 배포 및 DNS, 포트 포워딩 설정
+- OracleCloud 인스턴싱 컴퓨팅 서버에 배포, DNS 및 포트 포워딩 설정
