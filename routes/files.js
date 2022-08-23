@@ -125,18 +125,18 @@ const resizeImg = async function (file) {
   }
 };
 
-router.post('/file/image', function (req, res, next) {
+router.post('/image', function (req, res, next) {
   try {
-    if (req.session.user_id != null) {
-      next();
-    } else {
+    if (!req.session.user_id) {
       console.log('로그인 상태가 아니므로 이미지 업데이트 할 수 없음');
+      return;
     }
+    next();
   } catch (error) {
     next(error);
   }
 });
-router.post('/file/image', imgUpload.single('img'), function (req, res, next) {
+router.post('/image', imgUpload.single('img'), function (req, res, next) {
   try {
     if (!resizeImg(req)) return;
     res.status(200).send(req.file);
@@ -145,11 +145,11 @@ router.post('/file/image', imgUpload.single('img'), function (req, res, next) {
   }
 });
 
-router.post('images', imgUpload.array('img'), function (req, res, next) {
+router.post('/images', imgUpload.array('img'), function (req, res, next) {
   try {
     if (!req.session.user_id) {
       console.log('로그인 상태가 아니므로 이미지 업데이트를 할 수 없음');
-    } else {
+      return;
     }
   } catch (error) {}
 });

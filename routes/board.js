@@ -75,7 +75,7 @@ router
       next(error);
     }
   })
-  // 게시판 글 삭제
+  // 게시판 글 삭제 // todo: 작성 글 삭제시 이미지 파일도 삭제 필요
   .delete(async function (req, res, next) {
     try {
       console.log('id:', req.body);
