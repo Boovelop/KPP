@@ -91,7 +91,7 @@ app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/files', filesRouter);
 app.use('/board', boardRouter);
-app.use('/commnet', commentRouter);
+app.use('/comment', commentRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
