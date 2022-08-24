@@ -50,13 +50,6 @@ const utils = {
     return false;
   },
 
-  // (base64 or blob) to file
-  async urlToFile(url, fileName, mimeType) {
-    const response = await fetch(url);
-    const buffer = await response.arrayBuffer();
-    return new File([buffer], fileName, mimeType);
-  },
-
   base64StringToBlob(base64) {
     var type = base64.match(/data:([^;]+)/)[1];
     base64 = base64.replace(/^[^,]+,/g, '');
@@ -78,11 +71,17 @@ const utils = {
     return buf;
   },
 
-  /* base64 포맷의 url을 file데이터로 변환시켜주는 함수
-  Usage example:
-  var file = dataURLtoFile('data:text/plain;base64,aGVsbG8gd29ybGQ=', 'hello.txt'); */
-  dataURLtoFile(dataurl, fileName) {
-    var arr = dataurl.split(','),
+  // (base64 or blob) to file
+  async urlToFile(url, fileName, mimeType) {
+    const response = await fetch(url);
+    const buffer = await response.arrayBuffer();
+    return new File([buffer], fileName, mimeType);
+  },
+
+  /* base64 to file
+  Usage example: const file = dataURLtoFile('data:text/plain;base64,aGVsbG8gd29ybGQ=', 'hello.txt'); */
+  dataURLtoFile(dataURL, fileName) {
+    let arr = dataURL.split(','),
       mime = arr[0].match(/:(.*?);/)[1],
       bstr = window.atob(arr[1]),
       n = bstr.length,
@@ -93,5 +92,11 @@ const utils = {
     }
 
     return new File([u8arr], fileName, { type: mime });
+  },
+
+  isBase64(dataURL) {
+    const arr = dataURL.split(',');
+    if (!arr || !arr[0]) return false;
+    if (arr[0].search('base64') != -1) return true;
   },
 };
