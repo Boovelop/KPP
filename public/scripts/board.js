@@ -27,7 +27,6 @@ const board = {
     cancel: null,
   },
   image: {
-    files: [],
     elements: [],
   },
   initObj() {
@@ -55,20 +54,9 @@ const board = {
 
     if (board.state === boardState.write) board.initSummerNote();
     else if (board.state === boardState.read) {
-      // 글 읽기의 경우 기존 데이터를 서버에 요청한다.
       try {
-        board.boardResponseData = await $.ajax({
-          url: '/board',
-          method: 'search',
-          dataType: 'json',
-        });
-
-        board.textElements.$author.text(board.boardResponseData.author);
-        board.textElements.$create_at.text(board.boardResponseData.created_at);
-        board.textElements.$titleInput.val(board.boardResponseData.title);
-        board.textElements.$titleSpan.text(board.boardResponseData.title);
-        board.textElements.$mainText.html(board.boardResponseData.text);
-
+        // 글 읽기의 경우 기존 데이터를 서버에 요청한다.
+        await board.requestBoardData();
         // 로그인 되어있는 유저와 현재 선택한 게시글이 같은 경우 상태 변경
         const userResponse = await fetch('/users/single', {
           method: 'get',
@@ -222,7 +210,7 @@ const board = {
       for (const file of files) {
         formData.append('img', file);
       }
-      console.log('formData:', formData);
+
       $.ajax({
         url: 'files/images',
         type: 'POST',
@@ -232,67 +220,58 @@ const board = {
         processData: false,
         data: formData,
         success: response => {
-          console.log(response);
-          /* public폴더가 static으로 설정되어 있으니까
+          for (let i = 0; i < response.length; ++i) {
+            const file = response[i];
+            const selector = selectors[i];
+            if (!selector) break;
+            /* public폴더가 static으로 설정되어 있으니까
             경로에서 public을 제외한 나머지 경로를 받아온다. */
-          const resFilePath = res.path.replace('public', '');
-          // 이미지 태그의 소스 경로를 업데이트 한 파일로 수정한다.
-          selector.src = resFilePath;
-          console.log(resFilePath);
+            const resFilePath = file.path.replace('public', '');
+            // 이미지 태그의 소스 경로를 업데이트 한 파일로 수정한다.
+            selector.src = resFilePath;
+          }
           resolve(response);
         },
         error: error => {
-          console.error('Send ImageFiles Error', error);
+          if (error.status === 401) {
+            Swal.fire({
+              icon: 'error',
+              text: '글 작성 및 수정에 로그인이 필요합니다!',
+            });
+          } else {
+            console.error('Send ImageFiles Error', error);
+          }
           reject(error);
         },
       });
     });
   },
   async imageUpload() {
-    // todo: 이미지 업로드시 파일이 여러개일 경우 한번에 요청 하는 기능
-    // todo: 이미지 업로드 비동기 요청 처리
     board.image.elements = [
       ...document.querySelectorAll('div.note-editable img'),
     ];
-    // await utils.urlToFile(
-    //   board.image.elements[0],
-    //   board.image.elements[0].dataset.filename,
-    //   'image/*',
-    // );
-    // for (const imageElement of board.image.elements) {
-    //   board.image.files.push(
-    //     await utils.urlToFile(
-    //       imageElement.src,
-    //       imageElement.dataset.filename,
-    //       'image/*',
-    //     ),
-    //   );
-    // }
+
+    const Base64Selectors = [];
+    const imageFiles = [];
+    for (const imageElement of board.image.elements) {
+      if (!utils.isBase64(imageElement.src)) continue;
+      imageFiles.push(
+        utils.dataURLtoFile(
+          imageElement.src,
+          imageElement.dataset.filename,
+          'image/*',
+        ),
+      );
+      Base64Selectors.push(imageElement);
+    }
 
     try {
-      console.log('샌드 이미지 파일스 시작');
-      await board.sendImageFiles(board.image.files, board.image.elements);
-      console.log('샌드 이미지 파일스 끝');
+      await board.sendImageFiles(imageFiles, Base64Selectors);
       return true;
     } catch (error) {
       console.error('SendImageFiles Fail');
       return false;
     }
-
-    // // 서버에 이미지 업로드 요청
-    // for (let i = 0; i < boardObj.image.elements.length; i++) {
-    //   try {
-    //     // 동기적으로 서버에 이미지파일 업로드 요청, ImagePath를 받아온다.
-    //     // await board_sendImageFile(
-    //     //   boardObj.image.files[findIdx],
-    //     //   imageSelectors[i],
-    //     // );
-    //   } catch (error) {
-    //     console.error('board image upload error', error);
-    //     return false;
-    //   }
-    // }
-    // console.log('board_imageUpload complete');
   },
   getImageFileNameList(imageElements) {
     const length = imageElements?.length;
@@ -309,15 +288,10 @@ const board = {
 
     return imageFileNameList;
   },
-  // ------------------- Eventlistener -------------------
-  async onClickWriteBtn(e) {
-    e.preventDefault();
 
-    if (board.isHTTPRequesting) return;
-    board.isHTTPRequesting = true;
-
-    if (!board.submitChecker()) return; // 제목, 본문 빈 문자열 체크
-    if (!(await board.imageUpload())) return;
+  async boardUpload() {
+    if (!board.submitChecker()) return false;
+    if (!(await board.imageUpload())) return false;
 
     const reqBody = {
       author: board.textElements.$author.text(),
@@ -326,6 +300,33 @@ const board = {
       imageFileNameList:
         board.getImageFileNameList(board.image.elements)?.toString() ?? '',
     };
+
+    return reqBody;
+  },
+
+  async requestBoardData() {
+    // 서버에 게시판 정보를 받아온다.
+    board.boardResponseData = await $.ajax({
+      url: '/board',
+      method: 'search',
+      dataType: 'json',
+    });
+
+    // 현재 게시판 요소들을 받아온 데이터로 업데이트한다.
+    board.textElements.$author.text(board.boardResponseData.author);
+    board.textElements.$create_at.text(board.boardResponseData.created_at);
+    board.textElements.$titleInput.val(board.boardResponseData.title);
+    board.textElements.$titleSpan.text(board.boardResponseData.title);
+    board.textElements.$mainText.html(board.boardResponseData.text);
+  },
+  // ------------------- Eventlistener -------------------
+  async onClickWriteBtn(e) {
+    e.preventDefault();
+    if (board.isHTTPRequesting) return false;
+    board.isHTTPRequesting = true;
+
+    const reqBody = await board.boardUpload();
+    if (!reqBody) return;
 
     setTimeout(() => {
       fetch('/board', {
@@ -362,19 +363,13 @@ const board = {
   async onClickModifyBtn(e) {
     // todo: 게시글 수정시 이미지 파일 확인해서 필요없는 파일 삭제 기능 필요
     e.preventDefault();
-    if (board.isHTTPRequesting) return;
+    if (board.isHTTPRequesting) return false;
     board.isHTTPRequesting = true;
 
-    if (!board.submitChecker()) return;
-    if (!(await imageUpload())) return;
+    const reqBody = await board.boardUpload();
+    if (!reqBody) return;
 
-    const reqBody = {
-      author: board.textElements.$author.text(),
-      title: board.textElements.$titleInput.val(),
-      text: board.summerNoteElements.$text.html(),
-      imageFileNameList:
-        board.getImageFileNameList(board.image.elements)?.toString() ?? '',
-    };
+    reqBody.id = board.boardResponseData.id;
 
     setTimeout(() => {
       $.ajax({

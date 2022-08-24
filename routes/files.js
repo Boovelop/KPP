@@ -128,7 +128,9 @@ const resizeImg = async function (file) {
 router.post('/image', function (req, res, next) {
   try {
     if (!req.session.user_id) {
-      console.log('로그인 상태가 아니므로 이미지 업데이트 할 수 없음');
+      const message = '로그인 상태가 아니므로 이미지 업데이트 할 수 없습니다.';
+      console.warn(message);
+      res.status(401).send(message);
       return;
     }
     next();
@@ -138,20 +140,46 @@ router.post('/image', function (req, res, next) {
 });
 router.post('/image', imgUpload.single('img'), function (req, res, next) {
   try {
-    if (!resizeImg(req)) return;
+    if (!resizeImg(req)) {
+      const message = 'Image Resize Fail';
+      console.warn(message);
+      res.status(400).send(message);
+      return;
+    }
     res.status(200).send(req.file);
   } catch (error) {
     next(error);
   }
 });
 
-router.post('/images', imgUpload.array('img'), function (req, res, next) {
+router.post('/images', function (req, res, next) {
   try {
     if (!req.session.user_id) {
-      console.log('로그인 상태가 아니므로 이미지 업데이트를 할 수 없음');
+      const message =
+        '로그인 상태가 아니므로 이미지 업데이트를 할 수 없습니다.';
+      console.warn(message);
+      res.status(401).send(message);
       return;
     }
-  } catch (error) {}
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(400).send(error);
+    return;
+  }
+});
+
+router.post('/images', imgUpload.array('img'), function (req, res, next) {
+  try {
+    for (const file of req.files) {
+      if (!resizeImg(file)) {
+        throw 'resize image fail';
+      }
+    }
+    res.status(200).send(req.files);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // 클라이언트에서 웹 스크래핑 요청이 있을 때 호출
