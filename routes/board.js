@@ -40,7 +40,6 @@ router
           result: 'fail',
           errorMessage: 'there is not data: title or text or author.',
         });
-        next();
         return;
       }
 
@@ -60,10 +59,20 @@ router
   // 게시판 글 수정
   .patch(async function (req, res, next) {
     try {
+      const { title, text, author, imageFileNameList } = req.body;
+      if ([title, text, author, imageFileNameList].includes(null)) {
+        res.status(404).send({
+          result: 'fail',
+          errorMessage: 'there is not data: title or text or author.',
+        });
+        return;
+      }
+
       const board = await Board.update(
         {
-          title: req.body.title,
-          text: req.body.text,
+          title: title,
+          text: text,
+          imageFileNameList: imageFileNameList,
         },
         {
           where: { id: req.body.id },
