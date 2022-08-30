@@ -45,8 +45,8 @@ passport.use(
         });
         done(null, newUser);
       }
-    }
-  )
+    },
+  ),
 );
 
 router.get('/kakao', passport.authenticate('kakao'));
@@ -56,29 +56,30 @@ router.get(
   passport.authenticate('kakao', {
     successRedirect: 'login/success',
     failureRedirect: 'login/fail',
-  })
+  }),
 );
 
 router.get('/kakao/login/success', function (req, res, next) {
   setkakaoUserSession(req.session, req.user, kakaoData.accessToken);
-
-  // console.log(req.user); // 넘어온 유저 데이터 확인
-  res.redirect(`/auth/kakao/login/success/front?user_name=${req.user.user_name}`);
+  res.redirect(
+    `/auth/kakao/login/success/front?user_name=${req.user.user_name}`,
+  );
 });
 router.get('/kakao/login/success/front', function (req, res, next) {
   let redirectPath = '/';
   if (req.session.returnTo) redirectPath = req.session.returnTo;
 
   res.send(
-    `<script type='text/javascript'>alert('로그인 성공! ${req.query.user_name}님 어서오세요~!'); location.replace('${redirectPath}') </script>`
+    `<script type='text/javascript'>alert('로그인 성공! ${req.query.user_name}님 어서오세요~!'); location.replace('${redirectPath}') </script>`,
   );
 });
 router.get('/kakao/login/fail', function (req, res, next) {
-  //console.log(req.user);
   res.redirect(`/auth/kakao/login/fail/front`);
 });
 router.get('/kakao/login/fail/front', function (req, res, next) {
-  res.send(`<script type="text/javascript">alert("로그인에 실패했습니다!"); location.replace("/") </script>`);
+  res.send(
+    `<script type="text/javascript">alert("로그인에 실패했습니다!"); location.replace("/") </script>`,
+  );
 });
 
 router.get('/loginCheck', async function (req, res, next) {
@@ -103,17 +104,21 @@ router.get('/kakao/logout', function (req, res, next) {
 
   // 포트 번호가 80, 443이 아니라면 포트 번호를 붙혀준다.
   let callbackRoute = '';
-  if ([80, 443].includes(process.env.PORT)) {
+  if (process.env.PORT_FORWARDING || [80, 443].includes(process.env.PORT)) {
     callbackRoute = `http://${req.hostname}/auth/kakao/logout/callback`;
   } else {
     callbackRoute = `http://${req.hostname}:${process.env.PORT}/auth/kakao/logout/callback`;
   }
 
-  res.redirect(`https://kauth.kakao.com/oauth/logout?client_id=${process.env.KAKAO_KEY}&logout_redirect_uri=${callbackRoute}`);
+  res.redirect(
+    `https://kauth.kakao.com/oauth/logout?client_id=${process.env.KAKAO_KEY}&logout_redirect_uri=${callbackRoute}`,
+  );
 });
 
 router.get('/kakao/logout/callback', function (req, res, next) {
-  res.redirect(`/auth/kakao/logout/success/front?user_name=${req.user.user_name}`);
+  res.redirect(
+    `/auth/kakao/logout/success/front?user_name=${req.user.user_name}`,
+  );
 });
 
 router.get('/kakao/logout/success/front', function (req, res, next) {
@@ -122,7 +127,9 @@ router.get('/kakao/logout/success/front', function (req, res, next) {
 
   setkakaoUserSession(req.session, null);
 
-  res.send(`<script>alert('로그아웃 성공! ${req.query.user_name}님 안녕히 가세요^^'); location.replace('${redirectPath}');</script>`);
+  res.send(
+    `<script>alert('로그아웃 성공! ${req.query.user_name}님 안녕히 가세요^^'); location.replace('${redirectPath}');</script>`,
+  );
 });
 
 function setkakaoUserSession(session, user, token) {
