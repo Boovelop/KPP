@@ -16,7 +16,7 @@ router.get('/dir', async function (req, res, next) {
     // 경로가 존재하는지 확인한다.
     if (fs.existsSync(dir)) {
       // 경로안의 파일들의 이름을 읽어온다.
-      const readFilesName = await fs.readdirSync(dir);
+      const readFilesName = fs.readdirSync(dir);
       res.status(200).send(readFilesName);
     } else res.status(204).send(null);
   } catch (error) {
@@ -69,7 +69,7 @@ const imgUpload = multer({
       const baseName = path.basename(file.originalname, ext);
       const fullName = baseName + '_' + Date.now() + ext;
 
-      done(null, baseName + '_' + Date.now() + ext);
+      done(null, fullName);
     },
   }),
   limits: { fileSize: 5 * 1024 * 1024 },
@@ -178,6 +178,22 @@ router.post('/images', imgUpload.array('img'), function (req, res, next) {
     }
     res.status(200).send(req.files);
   } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete('/images', async function (req, res, next) {
+  try {
+    const { filePathList } = req.body;
+    const fileList = filePathList.split(',');
+    for (const file of fileList) {
+      await fs.promises.unlink(file);
+    }
+
+    res.status(200).send(true);
+  } catch (error) {
+    console.error(error);
     next(error);
   }
 });

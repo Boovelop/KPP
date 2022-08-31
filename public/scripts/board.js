@@ -2,10 +2,13 @@ const board = {
   state: '',
   isHTTPRequesting: false,
   boardResponseData: {
-    id: undefined,
-    author: undefined,
-    text: undefined,
-    title: undefined,
+    author: null,
+    created_at: null,
+    id: null,
+    image_files: null,
+    text: null,
+    title: null,
+    views: null,
   },
   summerNoteElements: {
     $root: null,
@@ -26,9 +29,8 @@ const board = {
     modify: null,
     cancel: null,
   },
-  image: {
-    elements: [],
-  },
+  imageElements: [],
+
   initObj() {
     this.textElements.$titleSpan = $('span.title-text');
     this.textElements.$titleInput = $('input.title-text');
@@ -55,18 +57,12 @@ const board = {
     if (board.state === boardState.write) board.initSummerNote();
     else if (board.state === boardState.read) {
       try {
-        // 글 읽기의 경우 기존 데이터를 서버에 요청한다.
+        // 글 읽기의 경우 기존 데이터를 서버에 요청하고 태그 요소에 데이터를 채워 넣는다.
         await board.requestBoardData();
-        // 로그인 되어있는 유저와 현재 선택한 게시글이 같은 경우 상태 변경
-        const userResponse = await fetch('/users/single', {
-          method: 'get',
-        });
-
-        if (userResponse.status === 200) {
-          const user = await userResponse.json();
-          if (user.user_uniqueName === board.boardResponseData.author) {
-            board.state = boardState.readAuthor;
-          }
+        board.setBoardData(board.boardResponseData);
+        // 로그인 되어있는 유저와 현재 선택한 게시글이 같은 경우 상태를 변경한다.
+        if (await board.isLoginUserInTheAuthor()) {
+          board.state = boardState.readAuthor;
         }
       } catch (error) {
         console.error('board search data request error', error);
@@ -247,13 +243,13 @@ const board = {
     });
   },
   async imageUpload() {
-    board.image.elements = [
+    board.imageElements = [
       ...document.querySelectorAll('div.note-editable img'),
     ];
 
     const Base64Selectors = [];
     const imageFiles = [];
-    for (const imageElement of board.image.elements) {
+    for (const imageElement of board.imageElements) {
       if (!utils.isBase64(imageElement.src)) continue;
       imageFiles.push(
         utils.dataURLtoFile(
@@ -269,41 +265,51 @@ const board = {
       await board.sendImageFiles(imageFiles, Base64Selectors);
       return true;
     } catch (error) {
-      console.error('SendImageFiles Fail');
       return false;
     }
   },
-  getImageFileNameList(imageElements) {
-    const length = imageElements?.length;
-    if (!length || !(imageElements[0] instanceof HTMLImageElement)) return '';
+  getImageFileName(imageElement) {
+    if (!imageElement || !(imageElement instanceof HTMLImageElement)) return '';
 
-    const imageFileNameList = [];
-    let source = '';
-    let fileName = '';
-    for (let i = 0; i < length; ++i) {
-      source = imageElements[i].src;
-      fileName = source.substring(source.lastIndexOf('/') + 1, source.length);
-      imageFileNameList.push(fileName);
-    }
+    const source = imageElement.src;
+    const fileName = source.substring(
+      source.lastIndexOf('/') + 1,
+      source.length,
+    );
 
-    return imageFileNameList;
+    return fileName;
   },
+  getImageFileNameList(imageElements) {
+    if (!imageElements?.length) return null;
 
+    return imageElements.map(value => {
+      return board.getImageFileName(value);
+    });
+  },
+  getImagePathList(imageElements) {
+    if (!imageElements?.length) return null;
+
+    return imageElements.map(value => {
+      return value.src;
+    });
+  },
+  getRequestBodyData() {
+    return {
+      id: board.boardResponseData.id,
+      author: board.textElements.$author.text(),
+      title: board.textElements.$titleInput.val(),
+      text: board.summerNoteElements.$text
+        ? board.summerNoteElements.$text.html()
+        : board.textElements.$mainText.html(),
+      imageFileNameList:
+        board.getImagePathList(board.imageElements)?.toString() ?? '',
+    };
+  },
   async boardUpload() {
     if (!board.submitChecker()) return false;
     if (!(await board.imageUpload())) return false;
-
-    const reqBody = {
-      author: board.textElements.$author.text(),
-      title: board.textElements.$titleInput.val(),
-      text: board.summerNoteElements.$text.html(),
-      imageFileNameList:
-        board.getImageFileNameList(board.image.elements)?.toString() ?? '',
-    };
-
-    return reqBody;
+    return this.getRequestBodyData();
   },
-
   async requestBoardData() {
     // 서버에 게시판 정보를 받아온다.
     board.boardResponseData = await $.ajax({
@@ -311,13 +317,61 @@ const board = {
       method: 'search',
       dataType: 'json',
     });
-
+  },
+  setBoardData(boardData) {
     // 현재 게시판 요소들을 받아온 데이터로 업데이트한다.
-    board.textElements.$author.text(board.boardResponseData.author);
-    board.textElements.$create_at.text(board.boardResponseData.created_at);
-    board.textElements.$titleInput.val(board.boardResponseData.title);
-    board.textElements.$titleSpan.text(board.boardResponseData.title);
-    board.textElements.$mainText.html(board.boardResponseData.text);
+    this.textElements.$author.text(boardData.author);
+    this.textElements.$create_at.text(boardData.created_at);
+    this.textElements.$titleInput.val(boardData.title);
+    this.textElements.$titleSpan.text(boardData.title);
+    this.textElements.$mainText.html(boardData.text);
+  },
+  async getLoginUserInfo() {
+    const response = await fetch('/users/single', {
+      method: 'get',
+    });
+    if (response.status === 200) return await response.json();
+    return null;
+  },
+  async isLoginUserInTheAuthor() {
+    const userInfo = await this.getLoginUserInfo();
+    if (userInfo) {
+      return userInfo.user_uniqueName === board.boardResponseData.author;
+    }
+    return false;
+  },
+  successAlert(title, text, delayTime = 500) {
+    return Swal.fire({
+      icon: 'success',
+      title: title,
+      text: text,
+      showConfirmButton: false,
+      timer: delayTime,
+    });
+  },
+  deleteImages(srcList) {
+    const filePathList =
+      srcList instanceof Array ? srcList : srcList.split(',');
+
+    let filePath = '';
+    for (let i = 0; i < filePathList.length; ++i) {
+      filePath = filePathList[i];
+      filePath = filePath.substring(
+        filePath.indexOf('uploads'),
+        filePath.length,
+      );
+      filePathList[i] = './public/' + filePath;
+    }
+
+    $.ajax({
+      url: '/files/images',
+      method: 'delete',
+      dataType: 'json',
+      data: { filePathList: filePathList.toString() },
+      error: error => {
+        console.error('images delete fail', error);
+      },
+    });
   },
   // ------------------- Eventlistener -------------------
   async onClickWriteBtn(e) {
@@ -336,10 +390,7 @@ const board = {
       })
         .then(function (res) {
           if (res.status == 200) {
-            Swal.fire({
-              icon: 'success',
-              title: '글쓰기 완료!',
-            }).then(function () {
+            board.successAlert('글쓰기 완료!', null, 0).then(function () {
               window.location.href = '/community';
             });
           }
@@ -356,52 +407,56 @@ const board = {
     // 편집 가능 상태로 전환
     board.initSummerNote();
     board.textElements.$titleInput.val(board.textElements.$titleSpan.text());
-    board.summerNoteElements.$text.html(board.boardResponseData.text);
+    board.summerNoteElements.$text.html(board.textElements.$mainText.html());
     board.state = boardState.editable;
     board.stateAction();
   },
   async onClickModifyBtn(e) {
-    // todo: 게시글 수정시 이미지 파일 확인해서 필요없는 파일 삭제 기능 필요
     e.preventDefault();
     if (board.isHTTPRequesting) return false;
     board.isHTTPRequesting = true;
 
+    // 현재 로그인된 유저와 글쓴이의 정보를 비교하여 예외를 처리한다.
+    if (!board.isLoginUserInTheAuthor()) {
+      board.isHTTPRequesting = false;
+      return false;
+    }
+
     const reqBody = await board.boardUpload();
     if (!reqBody) return;
 
-    reqBody.id = board.boardResponseData.id;
-
-    setTimeout(() => {
-      $.ajax({
-        url: '/board',
-        method: 'patch',
-        dataType: 'json',
-        data: reqBody,
-        success: function (res) {
-          if (res.result == 'success') {
-            Swal.fire({
-              position: 'top-end',
-              icon: 'success',
-              title: '게시글이 수정되었습니다.',
-              showConfirmButton: false,
-              timer: 1000,
-            });
-            selectBoard_onClickCancelBtn();
-          }
-        },
-        error: error => {
-          console.error('modify failed', error);
-        },
-        complete: () => {
-          board.isHTTPRequesting = false;
-        },
-      });
-    }, 500);
+    $.ajax({
+      url: '/board',
+      method: 'patch',
+      dataType: 'json',
+      data: reqBody,
+      success: function (res) {
+        if (res.result == 'success') {
+          board.successAlert('게시글이 수정되었습니다.', null, 0);
+          board.state = boardState.readAuthor;
+          board.stateAction();
+          board.textElements.$mainText.html(
+            board.summerNoteElements.$text.html(),
+          );
+        }
+      },
+      error: error => {
+        console.error('board modify failed', error);
+      },
+      complete: () => {
+        board.isHTTPRequesting = false;
+      },
+    });
   },
   async onClickDeleteBtn(e) {
     e.preventDefault();
     if (board.isHTTPRequesting) return;
     board.isHTTPRequesting = true;
+
+    if (!board.isLoginUserInTheAuthor()) {
+      board.isHTTPRequesting = false;
+      return false;
+    }
 
     // 삭제 전 확인 및 취소 선택 사항
     const result = await Swal.fire({
@@ -414,11 +469,14 @@ const board = {
     });
 
     if (result.isConfirmed) {
+      board.imageElements = [...document.querySelectorAll('#text > p > img')];
+      board.deleteImages(board.getImagePathList(board.imageElements));
+
       $.ajax({
         url: '/board',
         method: 'delete',
         dataType: 'json',
-        data: { id: board.boardResponseData.id },
+        data: board.getRequestBodyData(),
         success: function (res) {
           if (res.result == 'success') {
             Swal.fire({
@@ -428,6 +486,9 @@ const board = {
               window.location.replace('/community');
             });
           }
+        },
+        error: error => {
+          console.error('board delete fail', error);
         },
         complete: () => {
           board.isHTTPRequesting = false;

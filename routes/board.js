@@ -87,7 +87,6 @@ router
   // 게시판 글 삭제 // todo: 작성 글 삭제시 이미지 파일도 삭제 필요
   .delete(async function (req, res, next) {
     try {
-      console.log('id:', req.body);
       if (req.body.id) {
         const board = await Board.destroy({
           where: { id: req.body.id },
