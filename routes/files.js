@@ -185,10 +185,14 @@ router.post('/images', imgUpload.array('img'), function (req, res, next) {
 
 router.delete('/images', async function (req, res, next) {
   try {
+    res.status(404).send(new Error('errrrrr'));
+    return;
     const { filePathList } = req.body;
-    const fileList = filePathList.split(',');
+    const fileList = JSON.parse(filePathList);
     for (const file of fileList) {
-      await fs.promises.unlink(file);
+      if (fs.existsSync(file)) {
+        await fs.promises.unlink(file);
+      }
     }
 
     res.status(200).send(true);

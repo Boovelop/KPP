@@ -160,18 +160,12 @@ const board = {
   },
   submitChecker() {
     if (utils.isEmptyString(board.textElements.$titleInput.val())) {
-      Swal.fire({
-        icon: 'error',
-        text: '제목을 입력해주세요!',
-      });
+      board.errorAlert({ text: '제목을 입력해주세요!' });
       return false;
     }
 
     if (board.summerNoteElements.$root.summernote('isEmpty')) {
-      Swal.fire({
-        icon: 'error',
-        text: '본문을 입력해주세요!',
-      });
+      board.errorAlert({ text: '본문을 입력해주세요! ' });
       return false;
     }
 
@@ -180,20 +174,16 @@ const board = {
   imageFileChecker(file) {
     // 이미지 형식 확인
     if (!file.type.includes('image')) {
-      Swal.fire({
-        icon: 'warning',
-        text: '파일 형식이 이미지가 아닙니다',
-      });
+      board.warningAlert({ text: '이미지 파일 형식이 아닙니다.' });
       return false;
     }
 
     // 이미지 크기 확인
     const limitImageSize = 5 * 1024 * 1024;
     if (file.size >= limitImageSize) {
-      Swal.fire({
-        icon: 'warning',
+      board.warningAlert({
         title: '파일 용량 초과',
-        text: '이미지당 5MB미만으로 업로드가 가능합니다',
+        text: '이미지당 5MB미만으로 업로드가 가능합니다.',
       });
       return false;
     }
@@ -230,8 +220,7 @@ const board = {
         },
         error: error => {
           if (error.status === 401) {
-            Swal.fire({
-              icon: 'error',
+            board.errorAlert({
               text: '글 작성 및 수정에 로그인이 필요합니다!',
             });
           } else {
@@ -288,10 +277,7 @@ const board = {
   },
   getImagePathList(imageElements) {
     if (!imageElements?.length) return null;
-
-    return imageElements.map(value => {
-      return value.src;
-    });
+    return imageElements.map(value => decodeURIComponent(value.src));
   },
   getRequestBodyData() {
     return {
@@ -340,37 +326,65 @@ const board = {
     }
     return false;
   },
-  successAlert(title, text, delayTime = 500) {
+  successAlert({ title = null, text = null, endTime = 0, options = {} }) {
     return Swal.fire({
       icon: 'success',
-      title: title,
-      text: text,
-      showConfirmButton: false,
-      timer: delayTime,
+      title,
+      text,
+      timer: endTime,
+      ...options,
     });
   },
-  deleteImages(srcList) {
-    const filePathList =
-      srcList instanceof Array ? srcList : srcList.split(',');
+  errorAlert({ title = null, text = null, endTime = 0, options = {} }) {
+    return Swal.fire({
+      icon: 'error',
+      title,
+      text,
+      timer: endTime,
+      ...options,
+    });
+  },
+  warningAlert({ title = null, text = null, endTime = 0, options = {} }) {
+    return Swal.fire({
+      icon: 'warning',
+      title,
+      text,
+      timer: endTime,
+      ...options,
+    });
+  },
+  async deleteImages(srcList) {
+    return new Promise((resolve, reject) => {
+      // 삭제할 이미지가 없는 경우
+      if (!srcList || !srcList.length) resolve(true);
 
-    let filePath = '';
-    for (let i = 0; i < filePathList.length; ++i) {
-      filePath = filePathList[i];
-      filePath = filePath.substring(
-        filePath.indexOf('uploads'),
-        filePath.length,
-      );
-      filePathList[i] = './public/' + filePath;
-    }
+      const filePathList =
+        srcList instanceof Array ? srcList : srcList.split(',');
 
-    $.ajax({
-      url: '/files/images',
-      method: 'delete',
-      dataType: 'json',
-      data: { filePathList: filePathList.toString() },
-      error: error => {
-        console.error('images delete fail', error);
-      },
+      let filePath = '';
+      for (let i = 0; i < filePathList.length; ++i) {
+        filePath = filePathList[i];
+        filePath = filePath.substring(
+          filePath.indexOf('uploads'),
+          filePath.length,
+        );
+        filePathList[i] = './public/' + filePath;
+      }
+
+      $.ajax({
+        url: '/files/images',
+        method: 'delete',
+        dataType: 'json',
+        data: { filePathList: JSON.stringify(filePathList) },
+        success: async response => {
+          console.log('이미지 파일 삭제 성공');
+          return resolve(true);
+        },
+        error: async error => {
+          console.error('images delete fail', error);
+          return resolve(false);
+        },
+      });
     });
   },
   // ------------------- Eventlistener -------------------
@@ -390,9 +404,15 @@ const board = {
       })
         .then(function (res) {
           if (res.status == 200) {
-            board.successAlert('글쓰기 완료!', null, 0).then(function () {
-              window.location.href = '/community';
-            });
+            board
+              .successAlert({
+                title: '글쓰기 완료!',
+                endTime: 1000,
+                options: { confirmButton: false },
+              })
+              .then(function () {
+                window.location.href = '/community';
+              });
           }
         })
         .catch(function (error) {
@@ -432,7 +452,11 @@ const board = {
       data: reqBody,
       success: function (res) {
         if (res.result == 'success') {
-          board.successAlert('게시글이 수정되었습니다.', null, 0);
+          board.successAlert({
+            title: '게시글이 수정되었습니다.',
+            endTime: 1000,
+            options: { confirmButton: false },
+          });
           board.state = boardState.readAuthor;
           board.stateAction();
           board.textElements.$mainText.html(
@@ -459,18 +483,26 @@ const board = {
     }
 
     // 삭제 전 확인 및 취소 선택 사항
-    const result = await Swal.fire({
-      icon: 'warning',
+    const result = await board.warningAlert({
       title: '정말 삭제하시겠습니까?',
-      showCancelButton: true,
-      confirmButtonText: '삭제합니다',
-      cancelButtonText: '취소',
-      cancelButtonColor: '#d33',
+      options: {
+        showCancelButton: true,
+        confirmButtonText: '삭제합니다',
+        cancelButtonText: '취소',
+        cancelButtonColor: '#d33',
+      },
     });
 
     if (result.isConfirmed) {
       board.imageElements = [...document.querySelectorAll('#text > p > img')];
-      board.deleteImages(board.getImagePathList(board.imageElements));
+      const result = await board.deleteImages(
+        board.getImagePathList(board.imageElements),
+      );
+
+      if (!result) {
+        board.errorAlert({ text: '이미지 파일 삭제 요청 실패' });
+        return false;
+      }
 
       $.ajax({
         url: '/board',
@@ -479,12 +511,17 @@ const board = {
         data: board.getRequestBodyData(),
         success: function (res) {
           if (res.result == 'success') {
-            Swal.fire({
-              icon: 'success',
-              title: '작성글이 삭제되었습니다.',
-            }).then(function () {
-              window.location.replace('/community');
-            });
+            board
+              .successAlert({
+                title: '작성글이 삭제되었습니다.',
+                endTime: 1500,
+                options: {
+                  confirmButton: false,
+                },
+              })
+              .then(() => {
+                window.location.replace('/community');
+              });
           }
         },
         error: error => {
