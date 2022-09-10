@@ -185,8 +185,6 @@ router.post('/images', imgUpload.array('img'), function (req, res, next) {
 
 router.delete('/images', async function (req, res, next) {
   try {
-    res.status(404).send(new Error('errrrrr'));
-    return;
     const { filePathList } = req.body;
     const fileList = JSON.parse(filePathList);
     for (const file of fileList) {
