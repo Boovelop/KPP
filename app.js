@@ -12,10 +12,10 @@ const ColorHash = require('color-hash');
 // 환경변수 설정
 switch (process.env.NODE_ENV) {
   case 'production':
-    dotenv.config({ path: path.join(__dirname, 'production.env') });
+    dotenv.config({ path: path.join(__dirname, '.env.production') });
     break;
   case 'development':
-    dotenv.config({ path: path.join(__dirname, 'development.env') });
+    dotenv.config({ path: path.join(__dirname, '.env.development') });
     break;
   default:
     console.error('환경변수 파일을 찾을 수 없습니다. 종료 합니다.');
