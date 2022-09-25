@@ -15,11 +15,15 @@ const main = {
     interval: null,
   },
   album: {
-    jsonData: null,
+    videoElement: null,
+    videoContainer: null,
+    youtubeDataList: null,
   },
 
   initBindElements() {
     this.video.element = document.querySelector('#section-video>video');
+    this.album.videoContainer = $('#album-video-container');
+    this.album.videoElement = $('#album-video');
   },
 
   initState() {
@@ -86,40 +90,38 @@ const main = {
 
     // 서버에 파일을 요청해서 받는다.
     serverUtils
-      .getFile('./public/json', 'albumYoutubes.json')
+      .getFile('./public/json', 'albumYoutubeList.json')
       .then(function (res) {
-        if (res) main.album.jsonData = res.data;
+        if (res) main.album.youtubeDataList = res.data;
       });
 
     $('.album-slick').on('click', function (e) {
       if (e.target.parentElement.classList == 'slick-content') {
         const albumName = e.target.parentElement.lastChild.textContent;
-        let youtubeUrl = 'https://www.youtube.com/embed/0-q1KafFCLU';
-        const $modal = $('#album-video-contanier');
-        const $content = $('#album-video');
+        let youtubeUrl = main.album.youtubeDataList[0];
         let findIndex = -1;
 
-        for (let i = 0; i < this.album.jsonData.length; i++) {
-          if (this.album.jsonData[i].name == albumName) {
+        for (let i = 0; i < main.album.youtubeDataList.length; i++) {
+          if (main.album.youtubeDataList[i].name == albumName) {
             findIndex = i;
             break;
           }
         }
 
         if (findIndex != -1) {
-          youtubeUrl = this.album.jsonData[findIndex].url;
-          $modal.css('display', 'block');
-          $content.html(
+          youtubeUrl = main.album.youtubeDataList[findIndex].url;
+          main.album.videoContainer.css('display', 'block');
+          main.album.videoElement.html(
             `<iframe src="${youtubeUrl}" width="640" height="360" class="note-video-clip"></iframe>`,
           );
         }
       }
     });
 
-    $('#album-video-contanier').on('click', function (e) {
+    main.album.videoContainer.on('click', function (e) {
       if (e.target == this) {
         e.target.style.display = 'none';
-        $('#album-video').html('');
+        main.album.videoElement.html('');
       }
     });
   },
