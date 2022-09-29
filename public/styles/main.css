@@ -169,27 +169,22 @@
 	display: block;
 	padding: 0;
 	width: 1.5vw;
-	/* height: 3vw; */
 	cursor: pointer;
 	color: transparent;
 	outline: none;
 	border: none;
 	background: transparent;
-	/* background-repeat: no-repeat; */
 	transform: translate(0, -50%);
 }
 .slick-prev {
 	left: -4%;
-	/* background-image: url('../images/icons/caret-left-solid.svg'); */
 }
 .slick-next {
 	right: -4%;
-	/* background-image: url('../images/icons/caret-right-solid.svg'); */
 }
 
 .album-slick > button > img {
 	min-width: 8px;
-	/* filter: opacity(0.5) drop-shadow(0 0 0 skyblue); */
 	filter: opacity(0.8) invert(81%) sepia(39%) saturate(689%) hue-rotate(167deg) brightness(95%) contrast(94%);
 }
 
@@ -205,6 +200,7 @@
 
 /* 메세지 */
 #section-message {
+  position:relative;
 	margin: 0;
 	height: 60vw;
 	min-height: 400px;
@@ -213,4 +209,48 @@
 	background-attachment: fixed;
 	background-repeat: round;
 	background-size: cover;
+}
+
+
+#section-message .message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position:absolute;
+  width: 40vw;
+  bottom: 2rem;
+  left: 50%;
+  translate: -50%;
+  text-align: center;
+}
+
+.message-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1rem 1rem 0.1rem 1rem;
+  height: 2vw;
+  background-image: linear-gradient(to left, #fbf299, #ffbc6f, #ff7c78, #fe42a5, #a044dc);
+  border :none;
+  border-radius: 10px;
+}
+
+.message-label > span {
+  font-size: 0.9vw;
+  font-weight: 700;
+  background-image: linear-gradient(to right, #ffffff, #dcdcf3, #b3bce9, #829edf, #3783d4);
+  color: transparent;
+  -webkit-background-clip: text;
+}
+
+.message-container input {
+  padding: 0.6rem;
+  margin-top: 0.5rem;
+  width: 25vw;
+  border: 0;
+  border-radius: 15px;
+  outline: none;
+  background-color: rgb(233, 233, 233);
+  font-size: 0.8vw;
+  font-weight: 300;
 }
