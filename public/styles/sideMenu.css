@@ -13,12 +13,11 @@
     left: 0;
     top: 0;
     content: '';
-    width: 0.3vw;
+    width: 0.35rem;
     height: 100vh;
 
-    background: #008cff4b;
-    /* background: linear-gradient(180deg, rgb(162, 229, 255) 20%, #00ffea 200%); */
-    filter: blur(0.3vw);
+    background: #0066ff;
+    filter: blur(1rem);
 }
 
 #side-contents {
