@@ -55,3 +55,20 @@ a:hover {
 	display: block;
 	/* width: 80%; */
 }
+
+
+/* 스크롤 바 영역 설정*/
+body::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+/* 스크롤 바 막대 설정 */
+body::-webkit-scrollbar-thumb {
+  background-color: rgb(63, 157, 194);
+  border-radius: 10px;
+}
+
+/* 스크롤 바 뒷 배경 설정 */
+body::-webkit-scrollbar-track  {
+  background-color: skyblue;
+}
